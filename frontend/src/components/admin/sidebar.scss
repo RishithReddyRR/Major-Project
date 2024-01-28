@@ -1,0 +1,62 @@
+@import url('https://fonts.googleapis.com/css2?family=Kanit:ital,wght@1,500&display=swap');
+.sidebar{
+    display: flex;
+    flex-direction: column;
+    align-items:center;
+    // padding: 2vmax;
+    // border-right: .2vmax solid rgba(0,0,0,.4);
+    margin-right:.2vmax;
+    background-color: #fff;
+    box-sizing: border-box;
+    font-family: 'Kanit', sans-serif;
+    min-height: 100vh;
+    >a{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 1vmax;
+        >img{
+            width: 70%;
+            margin: auto;
+            padding:.3vmax;
+            &:hover{
+                box-shadow:0px 10px 15px tomato;
+                transform: scale(1.1);
+                transition: all 1s ease;
+            }
+        }
+    }
+    .dashboard-route{
+        display: flex;
+        height: 3vmax;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        margin-top: 2vmax;
+        box-sizing: border-box;
+        font-size: 1.2vmax;
+        color: rgba(0,0,0,.5);
+        // padding: .5vmax;
+        &:hover{
+            color: tomato !important;
+        }
+        .icon{
+            font-size: 1.5vmax;
+        }
+        >a{
+            &:hover{
+                color: tomato !important;
+            }
+            color: rgba(0,0,0,.5);
+            display: flex;
+            justify-content: center;
+            align-items:center;
+            text-decoration: none;
+            text-align: center;
+            box-sizing: border-box;
+            // padding-bottom: .2vmax;
+            // color: black;
+            margin-left:.5vmax;
+        }
+    }
+}

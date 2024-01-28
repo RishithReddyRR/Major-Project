@@ -1,0 +1,37 @@
+#nav{
+    height:3.8vmax;
+    background-color:rgba(17, 46, 66);
+    display: flex;
+    align-items:center;
+    justify-content: space-around;
+    position: sticky;
+    top: 0;
+    /* width: 100vw; */
+    z-index: 100;
+}
+#nav>a{
+    color: whitesmoke;
+    font-size: 1.2vmax;
+    text-decoration: none;
+    font-weight: bold;
+    padding: .5vmax 1vmax;
+
+}
+
+#nav>a:hover{
+    color: #0000e6;
+    background-color: white;
+    transform: scale(1.02);
+    transition: all .7s ease-in-out;
+}
+#nav>a:active{
+    transform: scale(.95);
+    transition: all .4s linear;
+}
+#search{
+    text-align: center;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2vmax;
+}

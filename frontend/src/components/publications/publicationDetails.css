@@ -1,0 +1,123 @@
+@import url("https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300&family=Courgette&family=Short+Stack&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Nova+Square&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Nova+Square&family=Quattrocento&display=swap');
+
+.pubDetails {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.details {
+  width: 90vw;
+  min-height: 100vh;
+  display: unset;
+  color: unset;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  background-color: whitesmoke;
+  padding: 1vmax;
+  box-sizing: border-box;
+}
+.details>h1{
+  width: 100%;
+}
+.details > h1 > a {
+  /* font-family: "Permanent Marker", cursive; */
+  font-family: "Nova Square", sans-serif;
+  
+  font-size: 2.2vmax;
+  color: rgb(230, 0, 115);
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  text-decoration: none;
+  align-content: center;
+  text-align: center !important;
+
+  display: block;
+}
+
+.details > h1 > a:hover {
+  color: rgba(230, 0, 115, 0.6);
+  transition: all ease 0.5s;
+}
+.link-symb {
+  animation-name: link;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+}
+@keyframes link {
+  from {
+    background-color: chartreuse;
+  }
+  to {
+    background-color: aqua;
+  }
+}
+.details > p {
+  font-size: 1.2vmax;
+  font-family: Short Stack;
+  margin: 0.9vmax;
+  margin-left: 2vmax !important
+
+}
+.details > p > p {
+  display: inline;
+  font-family: "Chakra Petch", sans-serif;
+  font-weight: bolder !important;
+  font-size: 1.6vmax;
+  color: #1b02f2;
+  margin-right: 0.4vmax;
+}
+.abstract {
+  display: grid;
+  grid-template-columns: 1fr 10fr;
+  box-sizing: border-box;
+  text-align: justify;
+}
+.abstract > p {
+  margin: 0;
+}
+.abstract > div {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  padding: 0.5vmax;
+}
+.key {
+  /* border:solid .2vmax #02F2E7; */
+  background-color: green;
+  padding: 0.4vmax;
+  color: white;
+  margin: 0.3vmax;
+  border-radius: 1vmax;
+  /* box-shadow: 0 10px 5px rgba(0, 0, 0, 0.3); */
+}
+.author {
+  /* border:solid .2vmax #02F2E7; */
+  background-color: darkslateblue;
+  padding: 0.4vmax;
+  color: white;
+  margin: 0.3vmax;
+  border-radius: 1vmax;
+  /* box-shadow: 0 10px 5px rgba(0, 0, 0, 0.3); */
+}
+
+.keywords {
+  display: flex;
+  /* justify-content:center; */
+  align-items: center;
+  /* width: 75vw; */
+  flex-wrap: wrap;
+}
+.loaderHead {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

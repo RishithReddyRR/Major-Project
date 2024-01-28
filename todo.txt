@@ -1,0 +1,11 @@
+publication details
+publication pagination
+o authentication
+photo capturing on login
+while registering asking for details
+responsive
+highlighting keywords
+meta data for each page
+No Publications page creation
+search history
+

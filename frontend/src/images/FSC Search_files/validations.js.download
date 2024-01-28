@@ -1,0 +1,1711 @@
+function trim(obj) {
+	var temp = "";
+	var c;
+	for ( var i = 0; i < obj.length; i++) {
+		c = obj.substring(i, i + 1);
+		if (c != " ")
+			temp = temp + c;
+	}
+	return temp;
+}
+function home() {
+	window.location = "menu.jsp";
+}
+function home1() {
+	window.location = "getmenu.jsp";
+}
+function previous() {
+	// window.l="menu.jsp";
+	history.back(1);
+}
+
+function prnt() {
+	document.f1.prn.style.visibility = "hidden";
+	document.f1.bck.style.visibility = "hidden";
+	window.print();
+	document.f1.prn.style.visibility = "";
+	document.f1.bck.style.visibility = "";
+
+}
+function Date_Diff(date1, date2, s, f) {
+	alert("diff");
+	var day1, day2, month1, month2, year1, year2, days = 0;
+	if (isDate(date1, s)) {
+		day1 = day;
+		month1 = mon;
+		year1 = year;
+	} else {
+		// alert("Invalid date format ");
+		return;
+	}
+	if (isDate(date2, f)) {
+		day2 = day;
+		month2 = mon;
+		year2 = year;
+	} else {
+		// alert("Invalid date format ");
+		return;
+	}
+	D1 = new Date();
+	D1.setDate(day1);
+	D1.setMonth(month1 - 1);
+	D1.setYear(year1);
+	D2 = new Date();
+	D2.setDate(day2);
+	D2.setMonth(month2 - 1);
+	D2.setYear(year2);
+	if (D1 > D2) {
+		for ( var i = year2; i <= year1; i++) {
+			dd1 = new Date();
+			dd2 = new Date();
+			dd1.setDate((i == year2 ? day2 : 1));
+			dd1.setMonth((i == year2 ? month2 - 1 : 0));
+			dd1.setYear((i == year2 ? year2 : i));
+			dd2.setDate((i == year1 ? day1 : 31));
+			dd2.setMonth((i == year1 ? month1 - 1 : 11));
+			dd2.setYear(i);
+			if (i != year2) {
+				for ( var j = dd1.getMonth(); j <= dd2.getMonth(); j++) {
+					dd1.setDate((i == year1 && j == eval(month1 - 1)) ? day1
+							: 1);
+					days += get_no_of_days(dd1.getDate(), j, dd1.getYear());
+				}
+			} else {
+				for ( var j = dd1.getMonth(); j < dd2.getMonth(); j++) {
+					dd1.setDate((i == year1 && j == eval(month1 - 1)) ? day1
+							: 1);
+					days += get_no_of_days(dd1.getDate(), j, dd1.getYear());
+				}
+				if (dd1.getMonth() != dd2.getMonth())
+					days += eval(day2);
+				else
+					days += dd2.getDate() - dd1.getDate() + 1;
+				// alert(day2);
+			}
+		}
+	} else {
+		for ( var i = year1; i <= year2; i++) {
+			dd1 = new Date();
+			dd2 = new Date();
+			dd1.setMonth((i == year1 ? month1 - 1 : 0));
+			dd1.setYear((i == year1 ? year1 : i));
+			dd2.setDate((i == year2 ? day2 : 31));
+			dd2.setMonth((i == year2 ? month2 - 1 : 11));
+			dd2.setYear(i);
+			dd1.setDate(i == year1 ? day1 : 1);
+			if (i != year2) {
+				for ( var j = dd1.getMonth(); j <= dd2.getMonth(); j++) {
+					dd1.setDate((i == year1 && j == eval(month1 - 1)) ? day1
+							: 1);
+					days += get_no_of_days(dd1.getDate(), j, dd1.getYear());
+				}
+			} else {
+				for ( var j = dd1.getMonth(); j < dd2.getMonth(); j++) {
+					dd1.setDate((i == year1 && j == eval(month1 - 1)) ? day1
+							: 1);
+					days += get_no_of_days(dd1.getDate(), j, dd1.getYear());
+				}
+				if (dd1.getMonth() != dd2.getMonth())
+					days += eval(day2);
+				else
+					days += dd2.getDate() - dd1.getDate() + 1;
+				// alert(day2);
+			}
+		}
+	}
+	return days;
+}
+function check_yesno(obj, s) {
+	var a = obj.value;
+	if ((trim(a) == "N") || (trim(a) == "n")) {
+		alert(s + "is must");
+		obj.focus();
+		return false;
+	} else
+		return true;
+
+}
+function check_number(obj, s) {
+	var a = obj.value;
+	if (trim(a) == "") {
+		alert("Enter " + s);
+		obj.focus();
+		return false;
+	}
+	if (a.indexOf(".") != -1) {
+		alert("Enter Valid " + s);
+		obj.focus();
+		return false;
+	}
+	if (isNaN(a) || a <= 0) {
+		alert("Enter Valid " + s);
+		obj.focus();
+		return false;
+	}
+	return true;
+}
+function check_number_withzero(obj, s) {
+	var a = obj.value;
+	if (trim(a) == "") {
+		alert("Enter " + s);
+		obj.focus();
+		return false;
+	}
+	if (a.indexOf(".") != -1) {
+		alert("Enter Valid " + s);
+		obj.focus();
+		return false;
+	}
+
+	if (isNaN(a) || a < 0) {
+		alert("Enter Valid " + s);
+		obj.focus();
+		return false;
+	}
+	return true;
+}
+
+function check_pin_null(obj, s) {
+	var a = obj.value;
+	if (trim(a) == "") {
+		return true;
+	}
+	if (a.indexOf(".") != -1) {
+		alert("Enter Valid " + s);
+		obj.focus();
+		return false;
+	}
+	if (isNaN(a) || a <= 0) {
+		alert("Enter Valid " + s);
+		obj.focus();
+		return false;
+	}
+	if (a.length != 6) {
+		alert(s + " should be 6 digits ");
+		obj.focus();
+		return false;
+	}
+	return true;
+}
+
+function check_number_null(obj, s) {
+	var a = obj.value;
+	if (trim(a) == "") {
+		return true;
+	}
+	if (a.indexOf(".") != -1)
+
+	{
+		alert("Enter Valid " + s);
+		obj.focus();
+		return false;
+	}
+	if (isNaN(a) || a <= 0) {
+		alert("Enter Valid " + s);
+		obj.focus();
+		return false;
+	}
+
+	return true;
+}
+function check_number_zero(obj, s) {
+	var a = obj.value;
+	if (trim(a) == "") {
+		alert("Enter " + s);
+		obj.focus();
+		return false;
+	}
+	if (a.indexOf(".") != -1) {
+		alert("Enter Valid " + s);
+		obj.focus();
+		return false;
+	}
+	if (isNaN(a)) {
+		alert("Enter Valid " + s);
+		obj.focus();
+		return false;
+	}
+
+	if (a.length > 1) {
+		var i, flg = 0;
+		for (i = 0; i < a.length; i++) {
+			var c = a.substring(i, i + 1);
+			if ((c != "0")) {
+				flg = 1;
+				return true;
+			} else {
+				flg = 0;
+			}
+		}
+		if (flg == 0) {
+			alert("Enter Valid " + s);
+			obj.focus();
+			return false;
+		}
+	}
+
+	return true;
+}
+
+function check_decimal(obj, s) {
+	var a = obj.value;
+	if (trim(a) == "") {
+		alert("Enter " + s);
+		obj.focus();
+		return false;
+	}
+	if (isNaN(a) || a <= 0) {
+		alert("Enter Valid " + s);
+		obj.focus();
+		return false;
+	}
+	return true;
+}
+
+function check_character(obj, s) {
+	var a = obj.value;
+	var flag = true;
+	if (trim(a) == "") {
+		alert("Enter " + s);
+		obj.focus();
+		return false;
+	}
+	for (i = 0; i < a.length; i++) {
+		if ((a.charAt(i) < "a" || a.charAt(i) > "z")
+				&& (a.charAt(i) < "A" || a.charAt(i) > "Z")
+				&& a.charAt(i) != " " && a.charAt(i) == "."
+				&& a.charAt(i) != "_") {
+			alert("Enter Valid " + s);
+			obj.focus();
+			return false;
+		}
+	}
+	return true;
+}
+
+function check_character_telugu(obj, s) {
+	var a = obj.value;
+	var flag = true;
+	if (trim(a) == "") {
+		alert("Enter " + s)
+		obj.focus();
+		return false;
+	}
+	if (a.charAt(i) < "9" && a.charAt(i) > "0") {
+		alert("Enter Valid " + s);
+		obj.focus();
+		return false;
+	}
+	return true;
+}
+
+function check_character_non_entry(obj, s) {
+	var a = obj.value;
+	var flag = true;
+	if (trim(a) == "") {
+		alert(s + "Should not be empty")
+		obj.focus();
+		return false;
+	}
+	for (i = 0; i < a.length; i++) {
+		if ((a.charAt(i) < "a" || a.charAt(i) > "z")
+				&& (a.charAt(i) < "A" || a.charAt(i) > "Z")
+				&& a.charAt(i) != " " && a.charAt(i) != "."
+				&& a.charAt(i) != "(" && a.charAt(i) != ")") {
+			alert(s + "Should be valid data");
+			obj.focus();
+			return false;
+		}
+	}
+	return true;
+}
+
+function check_character_null(obj, s) {
+	var a = obj.value
+	var flag = true;
+	if (trim(a) == "") {
+		return true;
+	}
+	for (i = 0; i < a.length; i++) {
+		if ((a.charAt(i) < "a" || a.charAt(i) > "z")
+				&& (a.charAt(i) < "A" || a.charAt(i) > "Z")
+				&& a.charAt(i) != " " && a.charAt(i) != ".") {
+			alert("Enter Valid " + s);
+			obj.focus();
+			return false;
+		}
+	}
+	return true;
+}
+
+function check_character_nospace(obj, s) {
+	var a = obj.value
+	var flag = true;
+	if (trim(a) == "") {
+		alert("Enter " + s)
+		obj.focus();
+		return false;
+	}
+	for (i = 0; i < a.length; i++) {
+		if ((a.charAt(i) < "a" || a.charAt(i) > "z")
+				&& (a.charAt(i) < "A" || a.charAt(i) > "Z")) {
+			alert("Enter Valid " + s);
+			obj.focus();
+			return false;
+		}
+	}
+	return true;
+}
+// function check_alphanumeric(obj, s) {
+// var a = obj.value;
+// if (trim(a) == "") {
+// alert("Enter " + s)
+// obj.focus();
+// return false;
+// }
+//
+// var i;
+// for (i = 0; i < a.length; i++) {
+// var c = a.substring(i, i + 1)
+// //if (((c < "a" || c > "z") && (c < "A" || c > "Z")) && (c < "0" || c > "9"
+// || c != "_")) {
+// if (((c < "a" || c > "z") && (c < "A" || c > "Z") && (c < "0" || c > "9"))) {
+// alert("c--------->"+c);
+// alert(s + " Must be Alphanumeric ")
+// obj.focus();
+// return false
+// } else{
+// alert("c---1111------>"+c);
+// return true;
+// }
+// }
+// return true;
+// }
+function check_alphanumericonly(obj, s) {
+	var a = obj.value;
+	if (trim(a) == "") {
+		alert("Enter " + s)
+		obj.focus();
+		return false;
+	}
+
+	var i;
+	for (i = 0; i < a.length; i++) {
+		var c = a.substring(i, i + 1)
+		if (((c < "a" || c > "z") && (c < "A" || c > "Z"))
+				&& (c < "0" || c > "9")) {
+			alert(s + " Must be Alphanumeric ")
+			obj.focus();
+			return false
+		} else
+			return true;
+	}
+	return true;
+}
+function check_reason(obj, s) {
+	var a = obj.value;
+	if (trim(a) == "") {
+		alert("Enter " + s)
+		obj.focus();
+		return false;
+	}
+	var i;
+	for (i = 0; i < a.length; i++) {
+		var c = a.substring(i, i + 1)
+		if (!((c >= "a" && c <= "z") || (c >= "A" && c <= "Z")
+				|| (c >= "0" && c <= "9") || (c == " ") || (c == ".")
+				|| (c == ",") || (c == "-"))) {
+			alert(s + " Should not contain special characters")
+			obj.focus();
+			return false;
+		}
+	}
+	return true;
+}
+function check_alphanumeric_null(obj, s) {
+	var a = obj.value;
+	if (trim(a) == "") {
+		return true;
+	}
+
+	var i;
+	for (i = 0; i < a.length; i++) {
+		var c = a.substring(i, i + 1)
+		if (((c < "a" || c > "z") && (c < "A" || c > "Z"))
+				&& (c < "0" || c > "9")) {
+			alert(s + " Must be Alphanumeric ")
+			obj.focus();
+			return false
+		}
+	}
+	return true;
+}
+
+function check_address(obj, s) {
+	var a = obj.value;
+	if (trim(a) == "") {
+		alert("Enter " + s)
+		obj.focus();
+		return false;
+	}
+	var i;
+	for (i = 0; i < a.length; i++) {
+		var c = a.substring(i, i + 1)
+		if (!((c >= "a" && c <= "z") || (c >= "A" && c <= "Z")
+				|| (c >= "0" && c <= "9") || (c == " ") || (c == ".")
+				|| (c == "(") || (c == ")") || (c == "/") || (c == "-")
+				|| (c == ":") || (c == "#") || (c == ",") || (c == "(")
+				|| (c == ")") || (c == "_") || (c == ".") || (c == ":")
+				|| (c == "[") || (c == "]"))) {
+			alert(s + " Should not contain special characters")
+			obj.focus();
+			return false;
+		}
+	}
+	return true;
+}
+function check_doorno_null(obj, s) {
+	var a = obj.value;
+	if (trim(a) == "") {
+		return true;
+	}
+	var i;
+	for (i = 0; i < a.length; i++) {
+		var c = a.substring(i, i + 1)
+		if (!((c >= "a" && c <= "z") || (c >= "A" && c <= "Z")
+				|| (c >= "0" && c <= "9") || (c == " ") || (c == "#")
+				|| (c == "/") || (c == "-") || (c == ":") || (c == ",")
+				|| (c == "(") || (c == ")") || (c == "_") || (c == ".")
+				|| (c == ":") || (c == "[") || (c == "]"))) {
+			alert(s + " Should not contain special characters")
+			obj.focus();
+			return false;
+		}
+	}
+	return true;
+}
+function check_doorno(obj, s) {
+	var a = obj.value;
+	if (trim(a) == "") {
+		alert("Enter " + s)
+		obj.focus();
+		return false;
+	}
+	var i;
+	for (i = 0; i < a.length; i++) {
+		var c = a.substring(i, i + 1)
+		if (!((c >= "a" && c <= "z") || (c >= "A" && c <= "Z")
+				|| (c >= "0" && c <= "9") || (c == " ") || (c == "#")
+				|| (c == "/") || (c == "-") || (c == ":") || (c == ",")
+				|| (c == "(") || (c == ")") || (c == "_") || (c == ".")
+				|| (c == "@") || (c == "[") || (c == "]"))) {
+			alert(s + " Should contain special characters like #/-:")
+			obj.focus();
+			return false;
+		}
+	}
+	return true;
+}
+
+function numCheck(nm) {
+	for ( var i = 0; i < nm.length; i++)
+		if (isNaN(nm.substring(i, i + 1)) || nm.substring(i, i + 1) == " ")
+			return false;
+	return true;
+}
+var mon;
+var day;
+var year, x, y, z;
+
+function isDate(dt, s) {
+	if (dt.value.length != 10) {
+		alert("Enter " + s + " in DD/MM/YYYY format");
+		dt.focus();
+		return false;
+	}
+
+	dtvals = dt.value.split("/");
+	// alert(dtvals);
+	if (dtvals.length != 3) {
+		alert("Enter Valid " + s);
+		dt.focus();
+		return false;
+	}
+	x = dtvals[0];
+	y = dtvals[1];
+	z = dtvals[2];
+	for ( var i = 0; i < dtvals.length; i++)
+		if (!numCheck(dtvals[i]) || dtvals[i] == "0" || dtvals[i] == "")
+			day = parseInt(dtvals[0], 10);
+	mon = parseInt(dtvals[1], 10);
+	year = parseInt(dtvals[2], 10);
+
+	if (day < 1 || day > 31 || mon < 1 || mon > 12 || year < 1000) {
+		alert("Enter Valid " + s);
+		dt.focus();
+		return false;
+	}
+	if (mon == 4 || mon == 6 || mon == 9 || mon == 11)
+		if (day > 30) {
+			alert("Enter Valid " + s);
+			dt.focus();
+			return false;
+		}
+
+	if (mon == 2)
+		if (year % 4 == 0 && year % 100 != 0 || year % 400 == 0)
+			if (day > 29) {
+				alert("Enter Valid " + s);
+				dt.focus();
+				return false;
+			} else if (day > 28) {
+				alert("Enter Valid " + s);
+				dt.focus();
+				return false;
+			}
+	return true;
+}
+function isDate_null(dt, s) {
+	if (trim(dt.value) == "") {
+		return true;
+	}
+	if (dt.value.length != 10) {
+		alert("Enter date " + s + " DD/MM/YYYY format");
+		return false;
+	}
+	dtvals = dt.value.split("/");
+	// alert(dtvals);
+	if (dtvals.length != 3) {
+		alert("Enter Valid " + s);
+		dt.focus();
+		return false;
+	}
+	x = dtvals[0];
+	y = dtvals[1];
+	z = dtvals[2];
+	for ( var i = 0; i < dtvals.length; i++)
+		if (!numCheck(dtvals[i]) || dtvals[i] == "0" || dtvals[i] == "")
+			day = parseInt(dtvals[0], 10);
+	mon = parseInt(dtvals[1], 10);
+	year = parseInt(dtvals[2], 10);
+
+	if (day < 1 || day > 31 || mon < 1 || mon > 12 || year < 1000) {
+		dt.focus();
+		return false;
+	}
+	if (mon == 4 || mon == 6 || mon == 9 || mon == 11)
+		if (day > 30) {
+			dt.focus();
+			return false;
+		}
+	if (mon == 2)
+		if (year % 4 == 0 && year % 100 != 0 || year % 400 == 0)
+			if (day > 29) {
+				dt.focus();
+				return false;
+			} else if (day > 28) {
+				dt.focus();
+				return false;
+			}
+	return true;
+}
+function agecheck(date1, age, s) {
+
+	if (isDate(date1, s)) {
+
+		day1 = x;
+		month1 = y;
+		year1 = z;
+		year1 = eval(year1) + eval(age);
+		return day1 + "/" + month1 + "/" + year1;
+	} else {
+		// alert("Invalid date format ");
+		return;
+	}
+}
+function isDate_null(dt, s) {
+	if (dt.value == "") {
+		return true;
+	}
+	dtvals = dt.value.split("/");
+	if (dtvals.length != 3) {
+		alert("Enter Valid " + s);
+		obj.focus();
+		return false;
+	}
+
+	for ( var i = 0; i < dtvals.length; i++)
+		if (!numCheck(dtvals[i]) || dtvals[i] == "0" || dtvals[i] == "")
+			var day = parseInt(dtvals[0], 10);
+	var mon = parseInt(dtvals[1], 10);
+	var year = parseInt(dtvals[2], 10);
+	if (day < 1 || day > 31 || mon < 1 || mon > 12 || year < 1000)
+		return false;
+	if (mon == 4 || mon == 6 || mon == 9 || mon == 11)
+		if (day > 30)
+			return false;
+	if (mon == 2)
+		if (year % 4 == 0 && year % 100 != 0 || year % 400 == 0)
+			if (day > 29)
+				return false;
+			else if (day > 28)
+				return false;
+	return true;
+}
+
+function change_date_format(obj) {
+	var first_sep = obj.value.indexOf("/", 0);
+	var second_sep = obj.value.indexOf("/", first_sep + 1);
+	if (first_sep != -1 && second_sep != -1) {
+		var d = obj.value.substring(0, first_sep);
+		var m = obj.value.substring(first_sep + 1, second_sep);
+		if (d.length == 1)
+			d = "0" + d;
+		if (m.length == 1)
+			m = "0" + m;
+		obj.value = d + "/" + m + "/" + obj.value.substring(second_sep + 1);
+	}
+}
+
+function isgtDate(fdate, sdate, fdatedesc, sdatedesc) {
+	var x, x1;
+	change_date_format(fdate);
+	change_date_format(sdate);
+	x = fdate.value;
+	x1 = sdate.value;
+	if (compare(x, x1))
+		return true;
+	else {
+		alert(fdatedesc + " Should be " + sdatedesc);
+		return false;
+	}
+}
+
+function compare(dtofass, dtop) {
+	var xd, xm, xyear;
+	var x1d, x1m, x1year;
+	xd = 0;
+	xm = 0;
+	xyear = 0;
+	x1d = 0;
+	x1m = 0;
+	x1year = 0;
+	var x = new Date(dtofass);
+	var x1 = new Date(dtop);
+	var first_sep, second_sep;
+	var Input = dtofass;
+
+	first_sep = parseFloat(Input.indexOf("/", 0));
+	second_sep = parseFloat(Input.indexOf("/", first_sep + 1));
+
+	xd = parseFloat(Input.substring(0, first_sep));
+
+	xm = parseFloat(Input.substring(first_sep + 1, second_sep));
+
+	xyear = parseFloat(Input.substring(second_sep + 1));
+
+	Input = 0;
+
+	Input = dtop;
+
+	first_sep = parseFloat(Input.indexOf("/", 0));
+	second_sep = parseFloat(Input.indexOf("/", first_sep + 1));
+
+	x1d = parseFloat(Input.substring(0, first_sep));
+
+	x1m = parseFloat(Input.substring(first_sep + 1, second_sep));
+
+	x1year = parseFloat(Input.substring(second_sep + 1));
+
+	if (xyear > x1year)
+		return false;
+	else {
+		if (xyear == x1year) {
+			if (xm > x1m)
+				return false;
+			else if (xm == x1m) {
+				if (xd > x1d)
+					return false;
+			}
+		}
+	}
+	return true;
+}
+
+function selectvalid(obj, desc) {
+	// alert(obj.value.length);
+	if (obj.value.length == 0) {
+		alert("Please Select " + desc);
+		obj.focus();
+		return false;
+
+	} else
+		return true;
+}
+
+function emptyTextBox(obj, desc) {
+	// alert(obj.value.length);
+	if (obj.value.length == 0) {
+		alert("Please Enter " + desc);
+		obj.focus();
+		return false;
+
+	} else
+		return true;
+}
+
+function selectvalid1(obj, desc) {
+
+	if (obj.selectedIndex == "-1") {
+		alert("Select " + desc);
+		obj.focus();
+		return false;
+
+	} else
+		return true;
+}
+function emailReq(obj, s) {
+	var a = obj.value;
+	if (trim(a) == "") {
+		alert("Enter " + s);
+		obj.focus();
+		return false;
+	}
+	if (a.length < 1) {
+		alert("Enter " + s);
+		obj.focus();
+		return false;
+	}
+	return true;
+}
+
+function EmailValidation(Element) {
+
+	var stremail = Element.value;
+	if (Element.value == "") {
+		return true;
+	} else {
+		var emailchar = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/;
+		if (emailchar.test(stremail)) {
+			return true;
+		} else {
+			alert("Enter valid Email Address");
+			Element.focus();
+			return false;
+		}
+	}
+}
+
+function validateSQL() {
+	var textAreas = document.f1.getElementsByTagName('TextArea');
+	for ( var i = 0; i < textAreas.length; i++) {
+		var replyContent = textAreas[i].value;
+		// new RegExp(searchText, 'gi')
+		alert('ignore case');
+		if (new RegExp(
+				'select|insert|delete|drop|script|update|create|\<|\>|\&', 'i')
+				.test(replyContent)) {
+			// alert('contains sql');
+			return false;
+		} else if (new RegExp('[^a-z|^A-Z|^0-9|^\\s]', 'i').test(replyContent)) {
+			return false;
+		}
+	}
+	return true;
+}
+function validateSQL(text) {
+	if (new RegExp(
+			'NULL|null|ALERT|alert|SELECT|select|INSERT|UPDATE|DELETE|SCRIPT|insert|delete|drop|script|update|create|\<|\>|\&',
+			'i').test(text)) {
+		return false;
+	} else if (new RegExp('[^a-z|^A-Z|^0-9|^\\s]', 'i').test(text)) {
+		return false;
+	} else {
+		return true;
+	}
+}
+
+function TextFieldValidator() {
+
+	add(StringValidator.lengthBetween(5, 15));
+	add(new PatternValidator("[a-z0-9_-]+"));
+
+}
+
+function check_character(obj, s) {
+	var a = obj.value
+	if (trim(a) == "") {
+		alert("Please Enter " + s)
+		obj.focus();
+		return false;
+	}
+	for ( var i = 0; i < a.length; i++) {
+		if ((a.charAt(i) < "a" || a.charAt(i) > "z")
+				&& (a.charAt(i) < "A" || a.charAt(i) > "Z")
+				&& a.charAt(i) != " ") {
+			alert("Enter Valid " + s);
+			obj.focus();
+			return false;
+		}
+	}
+	return true;
+}
+
+function check_character_dot(obj, s) {
+	var a = obj.value
+	if (trim(a) == "") {
+		alert("Please Enter " + s)
+		obj.focus();
+		return false;
+	}
+	for ( var i = 0; i < a.length; i++) {
+		if ((a.charAt(i) < "a" || a.charAt(i) > "z")
+				&& (a.charAt(i) < "A" || a.charAt(i) > "Z")
+				&& a.charAt(i) != " " && a.charAt(i) != ".") {
+			alert("Enter Valid " + s);
+			obj.focus();
+			return false;
+		}
+	}
+	return true;
+}
+
+function check_character_dot_null(obj, s) {
+	var a = obj.value
+	if (trim(a) == "") {
+		return true;
+	}
+	for ( var i = 0; i < a.length; i++) {
+		if ((a.charAt(i) < "a" || a.charAt(i) > "z")
+				&& (a.charAt(i) < "A" || a.charAt(i) > "Z")
+				&& a.charAt(i) != " " && a.charAt(i) != ".") {
+			alert("Enter Valid " + s);
+			obj.focus();
+			return false;
+		}
+	}
+	return true;
+}
+
+/*
+ * var errorData = "ActiveX controls not Initialized in your browser.Change
+ * setting of IE " + "Go To (Tools Menu -> Internet Options -> Security ->
+ * Custom level -> " + "Initialize and script ActiveX controls not marked as
+ * safe for scripting) " + "Choose Prompt Option.";
+ */
+
+function check_browse(obj, s) {
+	var a = obj.value;
+	var sizeLimit = 2 * 1000 * 10240;
+	
+	//alert("hai");
+
+	if (a.length == 0) {
+		alert("Upload valid file for " + s);
+		obj.focus();
+		return false;
+	} else {
+		try {
+			var objFSO = new ActiveXObject("Scripting.FileSystemObject");
+			var file = objFSO.getFile(a);
+			
+//			if (file.type.match('text/plain')) {
+//			    // file type is text/plain
+//			} else {
+//			    // file type is not text/plain
+//			}
+			var size = parseInt(file.size) / 1024;
+			var ext = a.substring(a.lastIndexOf('.') + 1);
+			// alert("sizeLimit--------->"+sizeLimit); 
+			//|| ext == "pdf"
+			//alert(ext);
+			if (ext == "JPEG" || ext == "jpeg" || ext == "jpg" || ext == "JPG" || ext == "pdf") {
+				if (parseInt(file.size) > sizeLimit) {
+					alert("Uploaded file size is " + Math.ceil(size)
+							+ "KB .Size limit is 1000KB for " + s);
+					obj.focus();
+					return false;
+				}
+				return true;
+			}
+//			alert("file.type---->"+file.type);
+//			var filety=file.type
+//			if (filety=='image/jpeg') {
+//				if (parseInt(file.size) > sizeLimit) {
+//					alert("Uploaded file size is " + Math.ceil(size)
+//							+ "KB .Size limit is 100KB for " + s);
+//					obj.focus();
+//					return false;
+//				}
+//				
+//			} 
+			else {
+				alert("Upload jpg  files only for " + s);
+				obj.focus();
+				return false;
+			}
+		} catch (e) {
+			// alert(errorData);
+			//alert("e.message--->"+e.message);
+			//alert("e.name--->"+e.name);
+			alert(e.toString());
+			return false;
+		}
+
+	}
+}
+
+function check_browse_meeseva(obj, s) {
+	var a = obj.value;
+	var sizeLimit = 2 * 100 * 1024;
+	//alert("am in webcontent ");
+	if (a.length == 0) {
+		alert("Upload valid file for " + s);
+		obj.focus();
+		return false;
+	} else {
+		try {
+			var objFSO = new ActiveXObject("Scripting.FileSystemObject");
+			//alert("am in else1");
+			//var objFSO = Server.CreateObject("Scripting.FileSystemObject");
+			//alert("objFSO===>"+objFSO);
+			var file = objFSO.getFile(a);
+			var size = parseInt(file.size) / 1024;
+			var ext = a.substring(a.lastIndexOf('.') + 1);
+			//alert(ext);
+//|| ext == "pdf"
+			if (ext == "PDF" || ext == "pdf" ) {
+				if (parseInt(file.size) > sizeLimit) {
+					alert("Uploaded file size is " + Math.ceil(size)
+							+ "KB .Size limit is 200KB for " + s);
+					obj.focus();
+					return false;
+				}
+				return true;
+			}
+//			var filety=file.type
+//				if (filety=='image/jpeg') {
+//					if (parseInt(file.size) > sizeLimit) {
+//						alert("Uploaded file size is " + Math.ceil(size)
+//								+ "KB .Size limit is 100KB for " + s);
+//						obj.focus();
+//						return false;
+//					}
+//					
+//				}
+			else {
+				alert("Please Upload PDF files only for " + s);
+				obj.focus();
+				return false;
+			}
+		} catch (e) {
+			// alert(errorData);
+			return false;
+		} 
+
+	}
+}
+
+
+function check_browse_epos_auth(obj, s) {
+	var a = obj.value;
+	var sizeLimit = 2 * 100 * 1024;
+	//alert("am in webcontent ");
+	if (a.length == 0) {
+		alert("Upload valid file for " + s);
+		obj.focus();
+		return false;
+	} else {
+		try {
+			var objFSO = new ActiveXObject("Scripting.FileSystemObject");
+			var file = objFSO.getFile(a);
+			var size = parseInt(file.size) / 1024;
+			var ext = a.substring(a.lastIndexOf('.') + 1);
+			//alert(ext);
+//|| ext == "pdf"
+			if (ext == "PDF" || ext == "pdf" || ext == "JPEG" || ext == "jpeg" || ext == "jpg" || ext == "JPG") {
+				if (parseInt(file.size) > sizeLimit) {
+					alert("Uploaded file size is " + Math.ceil(size)
+							+ "KB .Size limit is 200KB for " + s);
+					obj.focus();
+					return false;
+				}
+				return true;
+			}
+//			var filety=file.type
+//				if (filety=='image/jpeg') {
+//					if (parseInt(file.size) > sizeLimit) {
+//						alert("Uploaded file size is " + Math.ceil(size)
+//								+ "KB .Size limit is 100KB for " + s);
+//						obj.focus();
+//						return false;
+//					}
+//					
+//				}
+			else {
+				alert("Please Upload PDF or JPG files only for " + s);
+				obj.focus();
+				return false;
+			}
+		} catch (e) {
+			// alert(errorData);
+			return false;
+		} 
+
+	}
+}
+
+
+function check_browse_null(obj, s) {
+	var a = obj.value;
+	var sizeLimit = 2 * 100 * 1024;
+
+	if (a.length == 0) {
+		return true;
+	} else {
+		try {
+			var objFSO = new ActiveXObject("Scripting.FileSystemObject");
+			var file = objFSO.getFile(a);
+			var size = parseInt(file.size) / 1024;
+			var ext = a.substring(a.lastIndexOf('.') + 1);
+
+			if (ext == "JPEG" || ext == "jpeg" || ext == "jpg" || ext == "JPG") {
+				if (parseInt(file.size) > sizeLimit) {
+					alert("Uploaded file size is " + Math.ceil(size)
+							+ "KB .Size limit is 200KB for " + s);
+					obj.focus();
+					return false;
+				}
+				return true;
+			} else {
+				alert("Upload jpg or pdf files only for " + s);
+				obj.focus();
+				return false;
+			}
+		} catch (e) {
+			alert("Your Browser ActiveX Control is in Disable mode. Please Enable by following the Instructions given in Enable ActiveX Controls Link ");
+			//prompt("Your Browser ActiveX Control is in Disable mode Please Enable by fallowing the below Instructions\nCopy to clipboard: Ctrl+C, Enter", "-->ENABLE ACTIVEX CONTROL \n 1)Go to Tools-->Internet Options \n 2)Select security tab \n 3)Click on Trusted Sites (or Local Intranet depending on whether your site is trusted or not) \n 4) Click on Custom Level \n 5) Ensure that 'Initialize and script active x controls is not marked safe for scripting' is enabled - this comes under Activex controls and plug-ins section towards 1/4th of the scroll bar. \n 6)Click OK, OK.");
+
+			return false;
+		}
+	}
+}
+
+function check_browse_family(obj, s) {
+	var a = obj.value;
+	var sizeLimit = 2 * 100 * 1024;
+
+	if (a.length == 0) {
+		alert("Upload valid file for " + s);
+		obj.focus();
+		return false;
+	} else {
+		try {
+			var objFSO = new ActiveXObject("Scripting.FileSystemObject");
+			var file = objFSO.getFile(a);
+			var size = parseInt(file.size) / 1024;
+			var ext = a.substring(a.lastIndexOf('.') + 1);
+
+			if (ext == "JPEG" || ext == "jpeg" || ext == "jpg" || ext == "JPG") {
+				if (parseInt(file.size) > sizeLimit) {
+					alert("Uploaded file size is " + Math.ceil(size)
+							+ "KB .Size limit is 200KB for " + s);
+					obj.focus();
+					return false;
+				}
+				return true;
+			} else {
+				alert("Upload jpg or pdf files only for " + s);
+				obj.focus();
+				return false;
+			}
+		} catch (e) {
+			alert(errorData);
+			return false;
+		}
+
+	}
+}
+
+function check_browse_family1(obj, s) {
+	var a = obj.value;
+	var sizeLimit = 2 * 100 * 1024;
+
+	if (a.length == 0) {
+		alert("Upload valid file for " + s);
+		obj.focus();
+		return false;
+	} else {
+		try {
+			var objFSO = new ActiveXObject("Scripting.FileSystemObject");
+			var file = objFSO.getFile(a);
+			var size = parseInt(file.size) / 1024;
+			var ext = a.substring(a.lastIndexOf('.') + 1);
+
+			if (ext == "JPEG" || ext == "jpeg" || ext == "jpg" || ext == "JPG") {
+				if (parseInt(file.size) > sizeLimit) {
+					alert("Uploaded file size is " + Math.ceil(size)
+							+ "KB .Size limit is 200KB for " + s);
+					obj.focus();
+					return false;
+				}
+				return true;
+			} else {
+				alert("Upload jpg or pdf files only for " + s);
+				obj.focus();
+				return false;
+			}
+		} catch (e) {
+			// alert(errorData);
+			return false;
+		}
+
+	}
+}
+
+function check_browse_family_null(obj, s) {
+	var a = obj.value;
+	var sizeLimit = 2 * 100 * 1024;
+
+	if (a.length == 0) {
+		return true;
+	} else {
+		try {
+			var objFSO = new ActiveXObject("Scripting.FileSystemObject");
+			var file = objFSO.getFile(a);
+			var size = parseInt(file.size) / 1024;
+			var ext = a.substring(a.lastIndexOf('.') + 1);
+
+			if (ext == "JPEG" || ext == "jpeg" || ext == "jpg" || ext == "JPG") {
+				if (parseInt(file.size) > sizeLimit) {
+					alert("Uploaded file size is " + Math.ceil(size)
+							+ "KB .Size limit is 200KB for " + s);
+					obj.focus();
+					return false;
+				}
+				return true;
+			} else {
+				alert("Upload jpg or pdf files only for " + s);
+				obj.focus();
+				return false;
+			}
+		} catch (e) {
+			alert(errorData);
+			return false;
+		}
+	}
+}
+function check_NotnullField(obj, s) {
+	var a = obj.value
+	if (trim(a) == "") {
+		alert("Enter " + s)
+		obj.focus();
+		return false;
+	}
+	/*
+	 * for(var i=0;i<a.length;i++) { if((a.charAt(i)<"a" || a.charAt(i)>"z")&&
+	 * (a.charAt(i)<"A" || a.charAt(i)>"Z") && a.charAt(i)!=" ") { alert("Enter
+	 * Valid "+s); obj.focus(); return false; } }
+	 */
+	return true;
+}
+
+function check_address_hno_loc(obj, s) {
+	var a = obj.value;
+	var flag = false;
+	var textLen = a.length;
+	if (trim(a) == "") {
+		alert("Enter " + s)
+		obj.focus();
+		return false;
+	} else {
+		var i;
+		var rows = 0;
+		for (i = 0; i < a.length; i++) {
+			var c = a.substring(i, i + 1)
+			if (!(isWhitespace(c))) {
+				if ((c >= "a" && c <= "z") || (c >= "A" && c <= "Z")) {
+					flag = true;
+				}
+				if (!((c >= "a" && c <= "z") || (c >= "A" && c <= "Z")
+						|| (c >= "0" && c <= "9") || (c == " ") || (c == ".")
+						|| (c == "(") || (c == ")") || (c == ",") || (c == ":")
+						|| (c == "/") || (c == "-") || (c == "(") || (c == ")")
+						|| (c == "_") || (c == ".") || (c == "@") || (c == "#")
+						|| (c == "[") || (c == "]")))
+
+				{
+					alert(s + " should not contain special characters")
+					obj.focus();
+					return false;
+				}
+			} else {
+				rows = rows + 1;
+			}
+		}
+		if (!flag) {
+			alert("Enter Valid " + s);
+			obj.focus();
+			return false;
+		}
+		// if(textLen+rows>len){
+		// alert(s +" Length should not exceed "+len+" characters")
+		// obj.focus() ;
+		// return false;
+		// }
+	}
+	return true;
+}
+
+function check_alphanumeric_slash(obj, s) {
+	var a = obj.value
+	var flag = false;
+	if (trim(a) == "") {
+		alert("Enter " + s)
+		obj.focus();
+		return false;
+	}
+	for ( var i = 0; i < a.length; i++) {
+		var c = a.substring(i, i + 1)
+		if (!((c >= "a" && c <= "z") || (c >= "A" && c <= "Z")
+				|| (c >= "0" && c <= "9") || (c == "/") || (c == "-")
+				|| (c == ".") || (c == ",") || (c == ":") || (c == " ")
+				|| (c == "(") || (c == ")"))) {
+			alert("Enter Valid " + s);
+			obj.focus();
+			return false;
+		}
+
+	}
+	return true;
+}
+
+function check_alphanumeric_OLDRC(obj, s) {
+	var a = obj.value
+	var flag = false;
+	if (trim(a) == "") {
+		return true;
+	} else {
+		for ( var i = 0; i < a.length; i++) {
+			var c = a.substring(i, i + 1)
+			if (!((c >= "a" && c <= "z") || (c >= "A" && c <= "Z")
+					|| (c >= "0" && c <= "9") || (c == " "))) {
+				alert("Enter Valid " + s);
+				obj.focus();
+				return false;
+			}
+
+		}
+	}
+	return true;
+}
+
+function isDate_hipen(dt, s) {
+	if (dt.value.length != 10) {
+		alert("Enter " + s + " in DD/MM/YYYY format");
+		dt.focus();
+		return false;
+	}
+
+	dtvals = dt.value.split("-");
+	// alert(dtvals);
+	if (dtvals.length != 3) {
+		alert("Enter Valid " + s);
+		dt.focus();
+		return false;
+	}
+	x = dtvals[0];
+	y = dtvals[1];
+	z = dtvals[2];
+	for ( var i = 0; i < dtvals.length; i++)
+		if (!numCheck(dtvals[i]) || dtvals[i] == "0" || dtvals[i] == "")
+			day = parseInt(dtvals[0], 10);
+	mon = parseInt(dtvals[1], 10);
+	year = parseInt(dtvals[2], 10);
+
+	if (day < 1 || day > 31 || mon < 1 || mon > 12 || year < 1000) {
+		alert("Enter Valid " + s);
+		dt.focus();
+		return false;
+	}
+	if (mon == 4 || mon == 6 || mon == 9 || mon == 11)
+		if (day > 30) {
+			alert("Enter Valid " + s);
+			dt.focus();
+			return false;
+		}
+
+	if (mon == 2)
+		if (year % 4 == 0 && year % 100 != 0 || year % 400 == 0)
+			if (day > 29) {
+				alert("Enter Valid " + s);
+				dt.focus();
+				return false;
+			} else if (day > 28) {
+				alert("Enter Valid " + s);
+				dt.focus();
+				return false;
+			}
+	return true;
+}
+
+function check_reason_newCard(obj, s) {
+	var a = obj.value;
+	if (trim(a) == "") {
+		alert("Enter " + s)
+		obj.focus();
+		return false;
+	}
+	var i;
+	for (i = 0; i < a.length; i++) {
+		var c = a.substring(i, i + 1)
+		if (!((c >= "a" && c <= "z") || (c >= "A" && c <= "Z")
+				|| (c >= "0" && c <= "9") || (c == " ") || (c == ".")
+				|| (c == ",") || (c == "-") || (c == "/") || (c == "(")
+				|| (c == ")") || (c == "_") || (c == "#") || (c == ":")
+				|| (c == "@") || (c == "[") || (c == "]"))) {
+			alert(s + " Should not contain special characters")
+			obj.focus();
+			return false;
+		}
+	}
+	return true;
+}
+
+function checkBoxValidation(chkBoxName, s) {
+	var chks = document.getElementsByName(chkBoxName);
+	var hasChecked = false;
+	for ( var i = 0; i < chks.length; i++) {
+		if (chks[i].checked) {
+			hasChecked = true;
+			break;
+		}
+	}
+	if (hasChecked == false) {
+		alert("Select atleast one " + s);
+		return false;
+	} else
+		return true;
+}
+function isgtDate(fdate, sdate, fdatedesc, sdatedesc) {
+	var xd, xm, xyear;
+	var x1d, x1m, x1year;
+	xd = 0;
+	xm = 0;
+	xyear = 0;
+	x1d = 0;
+	x1m = 0;
+	x1year = 0;
+	var x = new Date(fdate);
+	var x1 = new Date(sdate);
+
+	var first_sep, second_sep;
+	var Input = fdate.value;
+	first_sep = parseFloat(Input.indexOf("/", 0));
+	second_sep = parseFloat(Input.indexOf("/", first_sep + 1));
+	xd = parseFloat(Input.substring(0, first_sep));
+
+	xm = parseFloat(Input.substring(first_sep + 1, second_sep));
+	xyear = parseFloat(Input.substring(second_sep + 1));
+
+	Input = 0;
+	Input = sdate.value;
+	first_sep = parseFloat(Input.indexOf("/", 0));
+	second_sep = parseFloat(Input.indexOf("/", first_sep + 1));
+	x1d = parseFloat(Input.substring(0, first_sep));
+	x1m = parseFloat(Input.substring(first_sep + 1, second_sep));
+	x1year = parseFloat(Input.substring(second_sep + 1));
+
+	if (x1year < xyear) {
+		alert(sdatedesc + " " + sdate.value
+				+ " should be greater than or equals to " + fdatedesc + " "
+				+ fdate.value);
+		return false;
+	} else {
+		if (xyear == x1year) {
+			if (x1m < xm) {
+				alert(sdatedesc + " should be greater than " + fdatedesc);
+				return false;
+			} else if (xm == x1m) {
+				if (x1d < xd) {
+					alert(sdatedesc + " should be greater than " + fdatedesc);
+					return false;
+				}
+
+			}
+		}
+	}
+	return true;
+}
+function check_alphanumeric_OLDRC_not_null(obj, s) {
+	var a = obj.value
+	var flag = false;
+	if (trim(a) == "") {
+		alert("Enter " + s)
+		obj.focus();
+		return false;
+	}
+	if (a.length != 15) {
+		alert(s + "length should be 15");
+		obj.focus();
+		return false;
+	}
+	for ( var i = 0; i < a.length; i++) {
+		var c = a.substring(i, i + 1)
+		if (!((c >= "a" && c <= "z") || (c >= "A" && c <= "Z") || (c >= "0" && c <= "9"))) {
+			alert("Enter Valid " + s);
+			obj.focus();
+			return false;
+		}
+
+	}
+	return true;
+}
+function check_policydecimal(obj, s) {
+	var a = obj.value;
+	// alert(a);
+	if (isNaN(a) || a < 0) {
+		alert("Enter Valid " + s);
+		obj.focus();
+		return false;
+	}
+	return true;
+}
+function check_policyprices(obj, s) {
+	var a = obj.value;
+
+	if (a > 100 || a < 0) {
+		alert("The value of " + s
+				+ " should be less than 100 and greater or equal to zero");
+		obj.focus();
+		return false;
+	}
+	return true;
+}
+
+function check_pwd(obj, s) {
+	var a = obj.value
+
+	if (trim(a) == "") {
+		alert("Enter " + s)
+		obj.focus();
+		return false;
+	}
+	for ( var i = 0; i < a.length; i++) {
+		if (((a.charAt(i) < "a" || a.charAt(i) > "z") && (a.charAt(i) < "A" || a
+				.charAt(i) > "Z"))
+				&& (a.charAt(i) < "0" || a.charAt(i) > "9")
+				&& a.charAt(i) != "_") {
+			alert("Enter Valid " + s);
+			obj.focus();
+			return false;
+		}
+
+	}
+	return true;
+}
+function check_character_trim(obj, s) {
+	var a = obj.value.trim();
+	var flag = true;
+	if (trim(a) == "") {
+		alert("Enter " + s)
+		obj.focus();
+		return false;
+	}
+	for (i = 0; i < a.length; i++) {
+		if ((a.charAt(i) < "a" || a.charAt(i) > "z")
+				&& (a.charAt(i) < "A" || a.charAt(i) > "Z")
+				&& a.charAt(i) != " " && a.charAt(i) != ".") {
+			alert("Enter Valid " + s);
+			obj.focus();
+			return false;
+		}
+	}
+	return true;
+}
+function check_mobile_number_null(obj, s, len) {
+	var a = obj.value;
+	if (trim(a) == "") {
+		return true;
+	}
+	if (a.indexOf(".") != -1) {
+		alert("Enter Valid " + s);
+		obj.focus();
+		return false;
+	}
+	if (isNaN(a) || a <= 0) {
+		alert("Enter Only Numbers for " + s);
+		obj.focus();
+		return false;
+	}
+	if (a.length != 10) {
+		alert(s + " length should be " + len);
+		obj.focus();
+		return false;
+	}
+	return true;
+}
+
+function check_textarea(obj, s) {
+	var a = obj.value;
+
+	if (a == "") {
+		alert("Enter" + s);
+		obj.focus();
+		return false;
+	}
+	return true;
+}
+
+function check_number_with_length(obj, s, len) {
+	var a = obj.value;
+	if (trim(a) == "") {
+		alert("Enter " + s);
+		obj.focus();
+		return false;
+	}
+	if (a.indexOf(".") != -1) {
+		alert("Enter Valid " + s);
+		obj.focus();
+		return false;
+	}
+	if (isNaN(a) || a <= 0) {
+		alert("Enter Valid " + s);
+		obj.focus();
+		return false;
+	}
+	if (a.length != len) {
+		alert(s + " length should be " + len);
+		obj.focus();
+		return false;
+	}
+	return true;
+}
+function compareDateWithCurrentDate(dt, todayDate, desc) {
+
+	if (isDate(dt, desc)
+			&& isgtDateWithValues('01/01/1900', dt.value, '01/01/1900', desc)
+			&& isltDateWithValues(dt.value, todayDate, desc, todayDate)) {
+		return true;
+	} else
+		return false;
+}
+function isgtDateWithValues(fdate, sdate, fdatedesc, sdatedesc) {
+	var xd, xm, xyear;
+	var x1d, x1m, x1year;
+	xd = 0;
+	xm = 0;
+	xyear = 0;
+	x1d = 0;
+	x1m = 0;
+	x1year = 0;
+	var first_sep, second_sep;
+	var Input = fdate;
+	first_sep = parseFloat(Input.indexOf("/", 0));
+	second_sep = parseFloat(Input.indexOf("/", first_sep + 1));
+	xd = parseFloat(Input.substring(0, first_sep));
+
+	xm = parseFloat(Input.substring(first_sep + 1, second_sep));
+	xyear = parseFloat(Input.substring(second_sep + 1));
+
+	Input = 0;
+	Input = sdate;
+	first_sep = parseFloat(Input.indexOf("/", 0));
+	second_sep = parseFloat(Input.indexOf("/", first_sep + 1));
+	x1d = parseFloat(Input.substring(0, first_sep));
+	x1m = parseFloat(Input.substring(first_sep + 1, second_sep));
+	x1year = parseFloat(Input.substring(second_sep + 1));
+
+	if (x1year < xyear) {
+		alert(sdatedesc + " should be greater than or equals to " + fdatedesc);
+		return false;
+	} else {
+		if (xyear == x1year) {
+			if (x1m < xm) {
+				alert(sdatedesc + " should be greater than or equals to "
+						+ fdatedesc);
+				return false;
+			} else if (xm == x1m) {
+				if (x1d < xd) {
+					alert(sdatedesc + " should be greater than or equals to "
+							+ fdatedesc);
+					return false;
+				}
+			}
+		}
+	}
+	return true;
+}
+
+/*
+ * newly added function by Siva To comare whether first date is less than second
+ * date or not with values
+ */
+function isltDateWithValues(fdate, sdate, fdatedesc, sdatedesc) {
+	var xd, xm, xyear;
+	var x1d, x1m, x1year;
+	xd = 0;
+	xm = 0;
+	xyear = 0;
+	x1d = 0;
+	x1m = 0;
+	x1year = 0;
+	var first_sep, second_sep;
+	var Input = fdate;
+	first_sep = parseFloat(Input.indexOf("/", 0));
+	second_sep = parseFloat(Input.indexOf("/", first_sep + 1));
+	xd = parseFloat(Input.substring(0, first_sep));
+	xm = parseFloat(Input.substring(first_sep + 1, second_sep));
+	xyear = parseFloat(Input.substring(second_sep + 1));
+	Input = 0;
+	Input = sdate;
+	first_sep = parseFloat(Input.indexOf("/", 0));
+	second_sep = parseFloat(Input.indexOf("/", first_sep + 1));
+	x1d = parseFloat(Input.substring(0, first_sep));
+	x1m = parseFloat(Input.substring(first_sep + 1, second_sep));
+	x1year = parseFloat(Input.substring(second_sep + 1));
+	if (xyear > x1year) {
+		alert(fdatedesc + " should be less than or equals to " + sdatedesc);
+		return false;
+	} else {
+		if (xyear == x1year) {
+			if (xm > x1m) {
+				alert(fdatedesc + " should be less than or equals to "
+						+ sdatedesc);
+				return false;
+			} else if (xm == x1m) {
+				if (xd > x1d) {
+					alert(fdatedesc + " should be less than or equals to "
+							+ sdatedesc);
+					return false;
+				}
+
+			}
+		}
+	}
+	return true;
+}
+
+function check_alphanumeric(str, s) {
+	var code, i, len;
+	var a = str.value;
+	if (trim(a) == "") {
+		alert("Enter " + s)
+		str.focus();
+		return false;
+	}
+	for (i = 0, len = a.length; i < len; i++) {
+		code = a.charCodeAt(i);
+		if (!(code > 47 && code < 58) && // numeric (0-9)
+		!(code > 64 && code < 91) && // upper alpha (A-Z)
+		!(code > 96 && code < 123)) { // lower alpha (a-z)
+			alert(s + " Must be Alphanumeric ")
+			str.focus();
+			return false;
+		}
+	}
+	return true;
+}
+
+
+
