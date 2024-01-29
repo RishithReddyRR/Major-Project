@@ -7,3 +7,46 @@
     cursor: pointer;
     font-size: 1.3vmax;
 }
+
+.admin-m-d{
+    width: unset !important;
+    margin-top:0 !important;
+
+}
+.p-a{
+    width: unset !important;
+    position: relative;
+}
+.filter-a{
+    background-color: white;
+    z-index: 19 !important;
+    min-height:100vmin !important;
+    overflow-y: unset !important;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: unset !important;
+    background-color: white !important;
+    transition: all .1s linear;
+}
+.close-a{
+    position: absolute;
+    right: 1vmax;
+    top: 1vmax;
+    font-size: 1.5vmax;
+    cursor: pointer;
+}
+
+.f-b-a-close{
+    top: -100vh;
+}
+.f-b-a-open{
+    top:0;
+}
+.filter-o-c{
+    position: absolute;
+    left: 1vmax;
+    top: 1vmax;
+    font-size: 4vmax;
+    cursor: pointer;
+}

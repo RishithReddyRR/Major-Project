@@ -96,11 +96,18 @@
 }
 .profile {
   margin-top: 1vmax;
-  width: 96%;
+  width: 94%;
 }
 .section-1 {
   display: grid;
   grid-template-columns: 1fr 1.5fr;
+  >div:nth-child(2){
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    margin-left:.5vmax;
+  }
 }
 .profile-photo {
   // width: 50%;
@@ -146,26 +153,28 @@
   // flex-direction: column;
   // justify-content: center;
   align-items: center;
-  background-color: #fff;
-  margin-left: 0.5vmax;
+  // background-color: #fff;
+  // margin-left: 0.5vmax;
   box-sizing: border-box;
-  padding: 2vmax;
+  // padding: 2vmax;
   box-sizing: border-box;
-  background-color: #292b46;
+  // background-color: #292b46;
+  width: 70%;
+  margin: 1vmax 0;
 
   > img {
     width: 50%;
     // height:70%;
   }
   > div {
-    background-color: white;
+    background-color: pink;
     > h1 {
       color: #ff0066;
       text-decoration: underline;
       text-align: center;
       font-size: 2.1vmax;
     }
-    width: 50%;
+    width: 100%;
     // border: solid .3vmax #980036;
     border-radius: 1vmax;
     > div {
@@ -261,27 +270,32 @@
 }
 .section-2 {
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
   background-color: #fff;
   margin-top: 0.5vmax;
-  > div {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    position: relative;
-    > h1 {
-      color: #d90166;
-      position: absolute;
-      top: 56%;
-      left: 32%;
-      font-size: 1.5vmax;
-    }
-    min-height: 30vmax;
-    width: 30vmax;
-  }
 }
+.donut {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  position: relative;
+  canvas{
+    width: 500px !important;
+    height: 500px !important;
+  }
+  > h1 {
+    color: #d90166;
+    position: absolute;
+    top: 50%;
+    left: 32%;
+    font-size: 1.5vmax;
+  }
+  min-height: 30vmax;
+  width: 30vmax;
+}
+
 
 .pb-filter {
   display: flex;
@@ -418,8 +432,8 @@ button {
   }
 }
 
-@media screen and (max-width: 1180px){
-  #timeline .timelineItem::after{
+@media screen and (max-width: 1180px) {
+  #timeline .timelineItem::after {
     right: -7px;
   }
 }
@@ -445,12 +459,11 @@ button {
       }
     }
   }
-  .pb-filter{
-    
-    >div:nth-child(2){
-      >button{
+  .pb-filter {
+    > div:nth-child(2) {
+      > button {
         width: 72%;
-        margin-left:.5vmax;
+        margin-left: 0.5vmax;
       }
     }
   }

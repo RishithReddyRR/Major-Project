@@ -11,6 +11,8 @@ import scopusIcon from "../../images/scopusIcon.png";
 import vidwanIcon from "../../images/vidwanIcon.png";
 import { useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
+import { BarChart } from "@mui/x-charts/BarChart";
+
 import {
   getUserPublications,
   uploadPublications,
@@ -31,7 +33,16 @@ import { RingLoader } from "react-spinners";
 
 ChartJs.register(ArcElement, Tooltip, Legend);
 const Account = () => {
-  const { user,loading } = useSelector((state) => state.user);
+  const { user, loading } = useSelector((state) => state.user);
+  const chartSetting = {
+    yAxis: [
+      {
+        label: "Publications Count",
+      },
+    ],
+    width: 570,
+    height: 370,
+  };
   const {
     publications,
     error,
@@ -39,6 +50,8 @@ const Account = () => {
     resultPerPage,
     totalPublications,
     countArray,
+    yearCount,
+    yearCitationsCount,
   } = useSelector((state) => state.userPublications);
   let ob = useSelector((state) => {
     return state.publicationUpload;
@@ -116,7 +129,7 @@ const Account = () => {
       dispatch({ type: "CLEAR_ERRORS" });
     }
     // console.log(file)
-  }, [error, currentPage, ob.error, ob.success,loading]);
+  }, [error, currentPage, ob.error, ob.success, loading]);
   const downloadAsWorkbook = () => {
     const ws = utils.json_to_sheet(totalPublications);
     /* create workbook and append worksheet */
@@ -150,33 +163,60 @@ const Account = () => {
                   {user.dob}
                 </p>
               </div>
-            </div>
-            <div className="research-profiles">
-              <div>
-                <h1>Research Profiles</h1>
+
+              <div className="research-profiles">
                 <div>
-                  <a href={user.gsProfile} target="blank">
-                    <img src={gsIcon} alt="google scholar" />
-                  </a>
-                  <a href={user.wosProfile} target="blank">
-                    <img src={wosIcon} alt="web of science" />
-                  </a>
-                  <a href={user.scopusProfile} target="blank">
-                    <img src={scopusIcon} alt="scopus" />
-                  </a>
-                  <a href={user.vidwanProfile} target="blank">
-                    <img src={vidwanIcon} alt="vidwan" />
-                  </a>
+                  <h1>Research Profiles</h1>
+                  <div>
+                    <a href={user.gsProfile} target="blank">
+                      <img src={gsIcon} alt="google scholar" />
+                    </a>
+                    <a href={user.wosProfile} target="blank">
+                      <img src={wosIcon} alt="web of science" />
+                    </a>
+                    <a href={user.scopusProfile} target="blank">
+                      <img src={scopusIcon} alt="scopus" />
+                    </a>
+                    <a href={user.vidwanProfile} target="blank">
+                      <img src={vidwanIcon} alt="vidwan" />
+                    </a>
+                  </div>
                 </div>
+                {/* <img src={ResearchProfilesImage} className="research-image" /> */}
               </div>
-              <img src={ResearchProfilesImage} className="research-image" />
+            </div>
+            <div>
+              <div className="donut">
+                <h1>Publications:{publicationsCount}</h1>
+                <Doughnut data={data} options={options}></Doughnut>
+              </div>
             </div>
           </div>
+
           <div className="section-2">
-            <div>
-              <h1>Publications:{publicationsCount}</h1>
-              <Doughnut data={data} options={options}></Doughnut>
+          {yearCount && (
+            <div className="pie-chart">
+              <BarChart
+                dataset={yearCount}
+                xAxis={[{ scaleType: "band", dataKey: "year"}]}
+                series={[{ dataKey: "count", label: "publications count" }]}
+                {...chartSetting}
+              />
+              <p>Last 15 years publications</p>
             </div>
+          )}
+          {yearCitationsCount && (
+            <div className="pie-chart">
+              <BarChart
+                dataset={yearCitationsCount}
+                xAxis={[{ scaleType: "band", dataKey: "year"}]}
+                series={[{ dataKey: "count", label: "citations count" }]}
+                {...chartSetting}
+              />
+              <p>Last 15 years Citations</p>
+            </div>
+          )}
+
           </div>
           <div className="section-3">
             <h1>Research Activities</h1>
@@ -225,14 +265,15 @@ const Account = () => {
           <div id="timeline" className="section-4">
             <h1>Education Details</h1>
             <div className="timelineBox">
-              {user.education&&user.education.map((item, index) => (
-                <TimelineItem
-                  period={item.period}
-                  degree={item.degree}
-                  index={index}
-                  institute={item.institute}
-                />
-              ))}
+              {user.education &&
+                user.education.map((item, index) => (
+                  <TimelineItem
+                    period={item.period}
+                    degree={item.degree}
+                    index={index}
+                    institute={item.institute}
+                  />
+                ))}
             </div>
           </div>
           <div className="section-5">

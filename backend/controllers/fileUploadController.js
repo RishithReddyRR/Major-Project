@@ -76,6 +76,7 @@ exports.uploadPublications=asyncErrorHandler(async (req,res)=>{
             item["listOfAuthors"]=item["listOfAuthors"].split(",")
             item["keywords"]=item["keywords"].split(",")            
         })
+        response.sort((a,b)=>b.noOfCitations-a.noOfCitations)
         Publication.insertMany(response)
         // for(let i=0;i<response.length;i++){
         //     ({name,age,branch}=response[i])

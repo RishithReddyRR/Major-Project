@@ -55,6 +55,7 @@ export const getPublications =
     fYear,
     tYear,
     fMonth,
+    eMonth,
     currentYear
   ) =>
   async (dispatch) => {
@@ -74,7 +75,7 @@ export const getPublications =
           category == "All" ? "" : category
         }&citations[gte]=${value[0]}&citations[lte]=${
           value[1]
-        }&ppp=${ppp}&fYear=${fYear}&tYear=${tYear}&fMonth=${fMonth}`,
+        }&ppp=${ppp}&fYear=${fYear}&tYear=${tYear}&fMonth=${fMonth.toUpperCase()}&eMonth=${eMonth.toUpperCase()}`,
         config
       );
       dispatch({ type: "PUBLICATION_SUCCESS", payload: data });

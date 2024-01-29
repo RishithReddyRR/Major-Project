@@ -19,6 +19,7 @@ import { MdCalendarMonth } from "react-icons/md";
 import { utils, writeFile } from "xlsx";
 import { BsFilterLeft } from "react-icons/bs";
 import { FaWindowClose } from "react-icons/fa";
+
 const categories = [
   "All",
   "Journal",
@@ -32,6 +33,7 @@ const Publications = () => {
   const dispatch = useDispatch();
   const [value, setValue] = useState([0, 1000]);
   const [ppp, setPpp] = useState(10);
+  const [Pppp, setPPpp] = useState(10);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -69,6 +71,7 @@ const Publications = () => {
   const [fYear, setFYear] = useState("1900");
   const [tYear, setTYear] = useState("");
   const [fMonth, setFMonth] = useState("");
+  const [eMonth, setEMonth] = useState("s");
   const [foc, setFoc] = useState(false);
   console.log(fYear);
   console.log(ppp);
@@ -97,6 +100,7 @@ const Publications = () => {
         fYear,
         tYear,
         fMonth,
+        eMonth,
         currentYear
       )
     );
@@ -107,9 +111,10 @@ const Publications = () => {
     keyword,
     category,
     value,
-    ppp,
+    Pppp,
     fYear,
     fMonth,
+    eMonth,
     tYear,
   ]);
   const downloadAsWorkbook = () => {
@@ -130,8 +135,8 @@ const Publications = () => {
 
       {/* <div className="publications-display"> */}
       <div className="main-display">
-        <div className= {`filterBox ${foc?"f-b-open":"f-b-close"}`}>
-        <FaWindowClose className="close" onClick={()=>setFoc(!foc)}/>
+        <div className={`filterBox ${foc ? "f-b-open" : "f-b-close"}`}>
+          <FaWindowClose className="close" onClick={() => setFoc(!foc)} />
           <div className="categoryBox">
             <div className="categories">
               {" "}
@@ -170,7 +175,7 @@ const Publications = () => {
                   {" "}
                   <MdCalendarMonth /> Year
                 </div>
-                <div className="fty" style={{textAlign:"center"}}>
+                <div className="fty" style={{ textAlign: "center" }}>
                   <select
                     className="date-filter from"
                     onChange={(event) => setFYear(event.target.value)}
@@ -202,16 +207,29 @@ const Publications = () => {
                   <BsCalendarMonth />
                   Month
                 </div>
-                <select
-                  className="date-filter"
-                  onChange={(event) => setFMonth(event.target.value)}
-                  value={fMonth}
-                >
-                  <option value={""}>Month</option>
-                  {months.map((month) => (
-                    <option value={month.toString()}>{month}</option>
-                  ))}
-                </select>
+                <div>
+                  <select
+                    className="date-filter"
+                    onChange={(event) => setFMonth(event.target.value)}
+                    value={fMonth}
+                  >
+                    <option value={""}>Month</option>
+                    {months.map((month) => (
+                      <option value={month.toString()}>{month}</option>
+                    ))}
+                  </select>
+                  -
+                  <select
+                    className="date-filter"
+                    onChange={(event) => setEMonth(event.target.value)}
+                    value={eMonth}
+                  >
+                    <option value={""}>Month</option>
+                    {months.map((month) => (
+                      <option value={month.toString()}>{month}</option>
+                    ))}
+                  </select>
+                </div>
               </div>
             </div>
           </div>
@@ -220,15 +238,18 @@ const Publications = () => {
           <p>Publications</p>
           <div className="b-filter">
             <div className="total-publications">
-            <BsFilterLeft  className="filter-side" onClick={()=>setFoc(!foc)}/>
+              <BsFilterLeft
+                className="filter-side"
+                onClick={() => setFoc(!foc)}
+              />
               <b>{`${category == "All" ? "Publications" : category}:`}</b>
-              {`(${ppp * (currentPage - 1) + 1}-${
-                currentPage * ppp
+              {`(${Pppp * (currentPage - 1) + 1}-${
+                currentPage * Pppp
               } publications from total ${filteredPublicationsCount} publications)`}
             </div>
             <div style={{ marginRight: "1vmax" }}>
-              <div className="ppp">
-                <select
+              <form className="ppp">
+                {/* <select
                   id="publications-per-page"
                   value={ppp}
                   onChange={(event) => setPpp(event.target.value)}
@@ -239,8 +260,24 @@ const Publications = () => {
                   <option value={30}>30</option>
                   <option value={40}>40</option>
                   <option value={50}>50</option>
-                </select>
-              </div>
+                </select> */}
+                <label htmlFor="">Publications per page</label>
+                <input
+                  type="text"
+                  value={ppp}
+                  onChange={(event) => setPpp(event.target.value)}
+                  id="publications-per-page"
+                  placeholder="publications per page"
+                  title="type number and click on enter "
+                />
+                <button
+                  onClick={() => {
+                    setCurrentPageNo(1);
+                    setPPpp(ppp);
+                  }}
+                  style={{ display: "none" }}
+                ></button>
+              </form>
               <div className="down">
                 <button onClick={downloadAsWorkbook} className="download-excel">
                   Download

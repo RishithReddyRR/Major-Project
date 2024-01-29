@@ -2,7 +2,10 @@ import React from "react";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteAllPublications, getPublications } from "../../actions/publicationsAction";
+import {
+  deleteAllPublications,
+  getPublications,
+} from "../../actions/publicationsAction";
 import { ToastContainer, toast } from "react-toastify";
 import { RingLoader } from "react-spinners";
 import { Publication, handleClose } from "./Publication";
@@ -13,7 +16,21 @@ import NoPublicationsImage from "../../images/NotFoundImage.jpg";
 import "./Publications.scss";
 import SideBar from "./SideBar";
 import { utils, writeFile } from "xlsx";
-
+import { FaWindowClose } from "react-icons/fa";
+import Slider from "@mui/material-next/Slider";
+import { BiSolidCategory } from "react-icons/bi";
+import { RiDoubleQuotesR } from "react-icons/ri";
+import { BsCalendarMonth } from "react-icons/bs";
+import { MdCalendarMonth } from "react-icons/md";
+import { BsFilterLeft } from "react-icons/bs";
+const categories = [
+  "All",
+  "Journal",
+  "Book Chapter",
+  "Conference",
+  "Patent",
+  "Copyright",
+];
 const AdminPublications = () => {
   const { deleted, success, error } = useSelector(
     (state) => state.publicationsDelete
@@ -22,7 +39,11 @@ const AdminPublications = () => {
   const dispatch = useDispatch();
   const [value, setValue] = useState([0, 1000]);
   const [ppp, setPpp] = useState(10);
+  const [Pppp, setPPpp] = useState(10);
 
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
   const currentDate = new Date();
   const currentYear = currentDate.getFullYear();
   let years = [];
@@ -56,6 +77,7 @@ const AdminPublications = () => {
   const [fYear, setFYear] = useState("1900");
   const [tYear, setTYear] = useState("");
   const [fMonth, setFMonth] = useState("");
+  const [eMonth, setEMonth] = useState("s");
   const [foc, setFoc] = useState(false);
   // console.log(fYear);
   // console.log(ppp);
@@ -98,6 +120,7 @@ const AdminPublications = () => {
         fYear,
         tYear,
         fMonth,
+        eMonth,
         currentYear
       )
     );
@@ -108,9 +131,10 @@ const AdminPublications = () => {
     keyword,
     category,
     value,
-    ppp,
+    Pppp,
     fYear,
     fMonth,
+    eMonth,
     tYear,
     success,
     deleted,
@@ -127,25 +151,129 @@ const AdminPublications = () => {
     <div className="publicationsD">
       <MetaData title={`Publications`} />
       {/* <div className="publications-display"> */}
-      <div className="main-display dashboard">
+      <div className="main-display admin-m-d dashboard">
         <SideBar />
         {loading ? (
-          <div className="loader">
+          <div className="loader publications p-a">
             <RingLoader color="tomato" size="10vmax" />
           </div>
         ) : (
-          <div className="publications ">
+          <div className="publications p-a ">
+            <BsFilterLeft className="filter-o-c" onClick={() => setFoc(!foc)} />
+            <div
+              className={`filterBox  filter-a ${
+                foc ? "f-b-a-open" : "f-b-a-close"
+              }`}
+            >
+              <FaWindowClose className="close-a" onClick={() => setFoc(!foc)} />
+              <div className="categoryBox">
+                <div className="categories">
+                  {" "}
+                  <BiSolidCategory />
+                  Categories
+                </div>
+                {categories.map((ele) => (
+                  <div
+                    className="category"
+                    onClick={() => {
+                      setCategory(ele);
+                    }}
+                  >
+                    {ele}
+                  </div>
+                ))}
+              </div>
+              <div className="line"></div>
+              <div className="cRange">
+                <p>
+                  <RiDoubleQuotesR />
+                  Citations
+                </p>
+                <Slider
+                  value={value}
+                  min={0}
+                  max={1000}
+                  valueLabelDisplay="on"
+                  onChange={handleChange}
+                />
+                <div className="line"></div>
+                <div className="year">
+                  <div className=" year-filter" style={{ marginTop: "1vmax" }}>
+                    {" "}
+                    <div className="categories">
+                      {" "}
+                      <MdCalendarMonth /> Year
+                    </div>
+                    <div className="fty" style={{ textAlign: "center" }}>
+                      <select
+                        className="date-filter from"
+                        onChange={(event) => setFYear(event.target.value)}
+                        value={fYear}
+                      >
+                        <option value={""}>From</option>
+                        {years.map((year) => (
+                          <option value={year.toString()}>{year}</option>
+                        ))}
+                      </select>
+                      -
+                      <select
+                        className="date-filter to"
+                        onChange={(event) => setTYear(event.target.value)}
+                        value={tYear}
+                      >
+                        <option value={""} disabled>
+                          To
+                        </option>
+                        {years.map((year) => (
+                          <option value={year.toString()}>{year}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                  <div className="line"></div>
+                  <div className="month-filter">
+                    <div className="categories">
+                      <BsCalendarMonth />
+                      Month
+                    </div>
+                    <div>
+                      <select
+                        className="date-filter"
+                        onChange={(event) => setFMonth(event.target.value)}
+                        value={fMonth}
+                      >
+                        <option value={""}>Month</option>
+                        {months.map((month) => (
+                          <option value={month.toString()}>{month}</option>
+                        ))}
+                      </select>
+                      -
+                      <select
+                        className="date-filter"
+                        onChange={(event) => setEMonth(event.target.value)}
+                        value={eMonth}
+                      >
+                        <option value={""}>Month</option>
+                        {months.map((month) => (
+                          <option value={month.toString()}>{month}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
             <p>Publications</p>
             <div className="b-filter">
               <div className="total-publications">
                 <b>{`${category == "All" ? "Publications" : category}:`}</b>
-                {`(${ppp * (currentPage - 1) + 1}-${
-                  currentPage * ppp
+                {`(${Pppp * (currentPage - 1) + 1}-${
+                  currentPage * Pppp
                 } publications from total ${filteredPublicationsCount} publications)`}
               </div>
               <div style={{ marginRight: "1vmax" }}>
-                <div className="ppp">
-                  <select
+                <form className="ppp">
+                  {/* <select
                     id="publications-per-page"
                     value={ppp}
                     onChange={(event) => setPpp(event.target.value)}
@@ -156,8 +284,23 @@ const AdminPublications = () => {
                     <option value={30}>30</option>
                     <option value={40}>40</option>
                     <option value={50}>50</option>
-                  </select>
-                </div>
+                  </select> */}
+                  <label htmlFor="">Publications per page</label>
+                  <input
+                    type="text"
+                    value={ppp}
+                    onChange={(event) => setPpp(event.target.value)}
+                    id="publications-per-page"
+                    placeholder="publications per page"
+                    title="type number and click on enter "
+                  />
+                  <button
+                    onClick={() => {
+                      setCurrentPageNo(1)
+                      setPPpp(ppp)}}
+                    style={{ display: "none" }}
+                  ></button>
+                </form>
                 <div className="down">
                   <button
                     onClick={downloadAsWorkbook}
@@ -167,17 +310,17 @@ const AdminPublications = () => {
                   </button>
                   <span>Download all publications as a excel sheet</span>
                 </div>
-                  <button
-                    className="delete-all-pubs"
-                    style={{backgroundColor:"red",marginLeft:".5vmax"}}
-                    onClick={
-                      ()=>{
-                        dispatch(deleteAllPublications())
-                      }
-                    }
-                  >
-                    Delete All Publications
-                  </button>
+                <button
+                  className="delete-all-pubs"
+                  style={{ backgroundColor: "red", marginLeft: ".5vmax" }}
+                  onClick={() => {
+                    let res=window.confirm("are you sure,do you want to delete all publications?")
+                    if(res)
+                    dispatch(deleteAllPublications());
+                  }}
+                >
+                  Delete All Publications
+                </button>
               </div>
             </div>
             <div className="line" style={{ width: "74vw" }}></div>

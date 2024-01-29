@@ -33,7 +33,7 @@ const publicationSchema = new mongoose.Schema({
     type: String,
   },
   year: String,
-  month: String,
+  month: {type:String,uppercase:true},
   academicYear: String,
   url: {
     type: String,

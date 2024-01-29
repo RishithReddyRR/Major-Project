@@ -15,6 +15,8 @@ export const publicationReducer = createReducer(
         action.payload.filteredPublicationsCount;
       state.totalPublications = action.payload.tPub;
       state.countArray = action.payload.countArray;
+      state.yearCount = action.payload.yearCount;
+      state.yearCitationsCount = action.payload.yearCitationsCount;
     },
     PUBLICATION_FAIL: (state, action) => {
       state.loading = false;

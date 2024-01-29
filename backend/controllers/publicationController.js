@@ -67,6 +67,36 @@ exports.getPublicationsOfUser = asyncErrorHandler(async (req, res, next) => {
   });
   countArray.push(tempP.length);
 
+  //year wise count
+  const currentDate = new Date();
+  const currentYear = currentDate.getFullYear();
+  const yearCount = [];
+  for (let i = 0; i < 15; i++) {
+    const x = await publication.find({
+      nameOfAuthor: name,
+      year: currentYear - i,
+    });
+    let ob = {
+      year: currentYear - i,
+      count: x.length,
+    };
+    yearCount.unshift(ob);
+  }
+  //year wise count
+  const yearCitationsCount = [];
+  for (let i = 0; i < 15; i++) {
+    const x = await publication.find({
+      nameOfAuthor: name,
+      year: currentYear - i,
+    });
+    let c=0
+    x.forEach(ele=>c+=ele.noOfCitations)
+    let ob = {
+      year: currentYear - i,
+      count:c,
+    };
+    yearCitationsCount.unshift(ob);
+  }
   // console.log(publications)
   res.status(200).json({
     success: "true",
@@ -75,6 +105,8 @@ exports.getPublicationsOfUser = asyncErrorHandler(async (req, res, next) => {
     resultPerPage,
     tPub,
     countArray,
+    yearCount,
+    yearCitationsCount,
   });
 });
 
@@ -259,10 +291,9 @@ exports.getPublicationsAdmin = asyncErrorHandler(async (req, res, next) => {
     publicationsCount,
     countArray,
     yearCount,
-    yearCountEach
+    yearCountEach,
   });
 });
-
 
 //delete publication @admin
 exports.deletePublication = asyncErrorHandler(async (req, res, next) => {
@@ -275,7 +306,7 @@ exports.deletePublication = asyncErrorHandler(async (req, res, next) => {
 //delete all publication @admin
 exports.deleteAllPublication = asyncErrorHandler(async (req, res, next) => {
   await publication.deleteMany();
-  const publications=await publication.find({})
+  const publications = await publication.find({});
   res.status(200).json({
     success: true,
     publications,
@@ -283,12 +314,11 @@ exports.deleteAllPublication = asyncErrorHandler(async (req, res, next) => {
 });
 //update publication @admin
 exports.updatePublication = asyncErrorHandler(async (req, res, next) => {
-  await publication.findByIdAndUpdate(req.params.id,req.body);
-  const publicationDetails =await publication.findById(req.params.id)
+  await publication.findByIdAndUpdate(req.params.id, req.body);
+  const publicationDetails = await publication.findById(req.params.id);
   // console.log(req.body)
   res.status(200).json({
     success: true,
     publicationDetails,
   });
 });
-

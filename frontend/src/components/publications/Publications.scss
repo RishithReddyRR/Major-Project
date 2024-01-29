@@ -127,8 +127,11 @@
   overflow-y: scroll;
   overflow-x: hidden;
   z-index: -1;
+  &::-webkit-scrollbar{
+    display: none;
+  }
 }
-*::-webkit-scrollbar {
+body::-webkit-scrollbar {
   display: none;
 }
 * {
@@ -215,10 +218,13 @@
   justify-content: space-between;
   align-items: center;
   min-height: 5vmax;
+  >div{
+    display: flex;
+  }
 }
 .date-filter {
   text-align: center;
-  width: 10vmax;
+  // width: 10vmax;
   outline: none;
   border: solid 0.1vmax rgba(0, 0, 0, 0.3);
   padding: 0.5vmax;
