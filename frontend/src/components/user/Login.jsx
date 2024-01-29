@@ -46,7 +46,7 @@ const Login = () => {
   return (
     <div id="login-page">
       <MetaData title={`Login`} />
-      <div id="vnr-logo">
+      <div id="vnr-logo" className="logoL" style={{width:"50%"}}>
         <h1 style={{ textAlign: "center" }}>
           Vallurupalli Nageswara Rao Vignana Jyothi Institute of Engineering
           &Technology
