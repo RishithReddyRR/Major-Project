@@ -9,9 +9,9 @@ let storage=multer.diskStorage(
 )
 const upload=multer({storage})
 const router=express.Router()
-router.post("/conference",upload.single('file'),uploadConferences)
-router.post("/journal",upload.single('file'),uploadJournals)
-router.post("/book-chapter",upload.single('file'),uploadBookChapter)
+// router.post("/conference",upload.single('file'),uploadConferences)
+// router.post("/journal",upload.single('file'),uploadJournals)
+// router.post("/book-chapter",upload.single('file'),uploadBookChapter)
 router.post("/publications",upload.single('file'),uploadPublications)
 
 

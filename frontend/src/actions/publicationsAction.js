@@ -70,13 +70,15 @@ export const getPublications =
       };
 
       dispatch({ type: "PUBLICATION_REQUEST" });
-      const { data } = await axios.get(
-        `/publication/publications?keyword=${keyword}&page=${currentPage}&typeOfPublication=${
+      const { data } = await axios.post(
+        `/publication/publications?page=${currentPage}&typeOfPublication=${
           category == "All" ? "" : category
         }&citations[gte]=${value[0]}&citations[lte]=${
           value[1]
         }&ppp=${ppp}&fYear=${fYear}&tYear=${tYear}&fMonth=${fMonth.toUpperCase()}&eMonth=${eMonth.toUpperCase()}`,
-        config
+        {
+          keyword
+        }
       );
       dispatch({ type: "PUBLICATION_SUCCESS", payload: data });
     } catch (error) {

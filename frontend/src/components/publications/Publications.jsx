@@ -135,7 +135,7 @@ const Publications = () => {
 
       {/* <div className="publications-display"> */}
       <div className="main-display">
-        <div className={`filterBox ${foc ? "f-b-open" : "f-b-close"}`}>
+        <div className={`filterBox ${foc ? "f-b-open" : "f-b-close"}`} onClick={()=>setCurrentPageNo(1)}>
           <FaWindowClose className="close" onClick={() => setFoc(!foc)} />
           <div className="categoryBox">
             <div className="categories">

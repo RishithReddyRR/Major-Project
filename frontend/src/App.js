@@ -11,6 +11,7 @@ import { useDispatch,useSelector} from 'react-redux';
 import { loadUser } from './actions/userActions';
 import ProtectedRoute from './components/routes/ProtectedRoute';
 import Search from './components/publications/Search';
+import Analytics from './components/analytics/Analytics.jsx';
 import Publications from './components/publications/Publications';
 import Dashboard from './components/admin/Dashboard'
 import AdminPublications from './components/admin/AdminPublications.jsx'
@@ -33,6 +34,7 @@ function App() {
         <Route path='/register' element={<Register/>}/>
         <Route path='/forgot-password' element={<Fpass/>}/>
         <Route path='/search' element={<Search/>}/>
+        <Route path='/analytics' element={<Analytics/>}/>
         <Route path='/publications/:keyword' element={<Publications/>}/>
         <Route path='/publications' element={<Publications/>}/>
         <Route path='/publication/:id' element={<PublicationDetails/>}/>

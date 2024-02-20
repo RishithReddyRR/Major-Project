@@ -1,6 +1,7 @@
 const express=require('express');
 const userRoute=require('./routes/userRoute')
 const fileRoute=require('./routes/fileRoute')
+const imagesRoute=require('./routes/imagesRoute')
 const publicationRoute=require('./routes/publicationRoute')
 const {connect}=require('./config/database')
 const {errorMiddleware}=require('./middleware/error')
@@ -27,11 +28,11 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET,
   });
 //middleware to parse body json
-app.use(express.json())
+app.use(express.json({limit:"50mb"}))
 //middleware to parse cookie
 app.use(cookieParser())
 //body parser to parse body
-app.use(bodyParser.urlencoded({extended:true}))
+app.use(bodyParser.urlencoded({extended:true,limit:"50mb"}))
 
 //file upload
 app.use('/upload',fileRoute)
@@ -43,6 +44,7 @@ app.use(fileUpload());
 //user
 app.use('/user',userRoute)
 app.use('/publication',publicationRoute)
+app.use('/carousel-image',imagesRoute)
 //middleware to handle the errors
 app.use(errorMiddleware)
 //this is to listen the requests

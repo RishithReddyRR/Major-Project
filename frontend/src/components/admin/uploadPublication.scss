@@ -1,10 +1,36 @@
 .upload-container{
     min-height: 90vh;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    justify-content: space-around;
     align-items: center;
-    background-color:whitesmoke;
+    background-color:white;
+    // margin-left: .5vmax;
     >div{
         box-shadow: 0px 10px 15px rgba(0,0,0,.5);
+        margin: 3vmax 0;
+        background-color: whitesmoke;
     }
 }
+
+.upload-images{
+    width: 40vw;
+    background-color: white;
+    background-color: whitesmoke;
+    margin: 3vmax 0;
+    >div{
+        align-items: center;
+
+        >button{
+            width: 70%;
+            background-color: green;
+            border: none;
+            color: white;
+            padding: .5vmax;
+            border-radius: 1vmax;
+            margin-bottom: 1vmax;
+        }
+    }
+}
+
+

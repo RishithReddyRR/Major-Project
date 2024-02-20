@@ -1,7 +1,7 @@
 const { asyncErrorHandler } = require("../middleware/catchAsyncError");
-const journal = require("../models/journalModel");
-const conference = require("../models/conferenceModel");
-const bookChapter = require("../models/bookChapterModel");
+// const journal = require("../models/journalModel");
+// const conference = require("../models/conferenceModel");
+// const bookChapter = require("../models/bookChapterModel");
 const publication = require("../models/publicationModel");
 const ApiFeatures = require("../utils/apiFeatures");
 //user publication details
@@ -89,11 +89,11 @@ exports.getPublicationsOfUser = asyncErrorHandler(async (req, res, next) => {
       nameOfAuthor: name,
       year: currentYear - i,
     });
-    let c=0
-    x.forEach(ele=>c+=ele.noOfCitations)
+    let c = 0;
+    x.forEach((ele) => (c += ele.noOfCitations));
     let ob = {
       year: currentYear - i,
-      count:c,
+      count: c,
     };
     yearCitationsCount.unshift(ob);
   }
@@ -112,29 +112,29 @@ exports.getPublicationsOfUser = asyncErrorHandler(async (req, res, next) => {
 
 //get publications
 
-exports.getPublications = asyncErrorHandler(async (req, res, next) => {
-  const resultPerPage = req.query.ppp;
-  const publicationsCount = await publication.countDocuments();
-  const apiFeatures = new ApiFeatures(publication.find(), req.query)
-    .search()
-    .filter();
-  let pub = await apiFeatures.query;
-  let filteredPublicationsCount = pub.length;
-  // const pubJ=await apiFeatures.queryJ
-  // const pubC=await apiFeatures.queryC
-  // const pub=[...pubB,...pubJ,...pubC]
-  const tPub = [...pub];
-  apiFeatures.pagination(resultPerPage);
-  pub = await apiFeatures.query.clone();
-  res.status(200).json({
-    success: true,
-    publications: pub,
-    publicationsCount,
-    resultPerPage,
-    filteredPublicationsCount,
-    tPub,
-  });
-});
+// exports.getPublications = asyncErrorHandler(async (req, res, next) => {
+//   const resultPerPage = req.query.ppp;
+//   const publicationsCount = await publication.countDocuments();
+//   const apiFeatures = new ApiFeatures(publication.find(), req.query)
+//     .search()
+//     .filter();
+//   let pub = await apiFeatures.query;
+//   let filteredPublicationsCount = pub.length;
+//   // const pubJ=await apiFeatures.queryJ
+//   // const pubC=await apiFeatures.queryC
+//   // const pub=[...pubB,...pubJ,...pubC]
+//   const tPub = [...pub];
+//   apiFeatures.pagination(resultPerPage);
+//   pub = await apiFeatures.query.clone();
+//   res.status(200).json({
+//     success: true,
+//     publications: pub,
+//     publicationsCount,
+//     resultPerPage,
+//     filteredPublicationsCount,
+//     tPub,
+//   });
+// });
 
 //get publications for home page
 exports.getPublicationHome = asyncErrorHandler(async (req, res, next) => {
@@ -320,5 +320,129 @@ exports.updatePublication = asyncErrorHandler(async (req, res, next) => {
   res.status(200).json({
     success: true,
     publicationDetails,
+  });
+});
+
+//update publication @admin
+exports.getPublications = asyncErrorHandler(async (req, res, next) => {
+  // console.log("in dup");
+  const resultPerPage = Number(req.query.ppp);
+  const publicationsCount = await publication.countDocuments();
+  console.log(req.body.keyword)
+  let arK=req.body.keyword.split(" ")
+  if(arK.length>16){
+    arK=arK.slice(0,17)
+  }
+  req.body.keyword=arK.join(" ")
+  console.log(req.body.keyword)
+  const months = [
+    "JANUARY",
+    "FEBRUARY",
+    "MARCH",
+    "APRIL",
+    "MAY",
+    "JUNE",
+    "JULY",
+    "AUGUST",
+    "SEPTEMBER",
+    "OCTOBER",
+    "NOVEMBER",
+    "DECEMBER",
+  ];
+  let monthMap = new Map();
+  for (let i = 0; i < months.length; i++) {
+    monthMap.set(months[i], i);
+  }
+  monthMap.set("", 0);
+  monthMap.set("s", 11);
+  let top =
+    req.query.typeOfPublication == ""
+      ? ["All", "Journal", "Book Chapter", "Conference", "Patent", "Copyright"]
+      : req.query.typeOfPublication;
+  const agexp = [
+    {
+      $search: {
+        index: "publications_search",
+        compound: {
+          must: [
+            {
+              text: {
+                query: top,
+                path: "typeOfPublication",
+                fuzzy: {},
+              },
+            },
+          ],
+          filter: [
+            {
+              range: {
+                path: "noOfCitations",
+                gte: Number(req.query.citations.gte),
+                lte: Number(req.query.citations.lte),
+              },
+            },
+            {
+              range: {
+                path: "year",
+                gte: Number(req.query.fYear),
+                lte: Number(req.query.tYear),
+              },
+            },
+          ],
+        },
+      },
+    },
+    {
+      $addFields: {
+        score: { $meta: "searchScore" },
+      },
+    },
+  ];
+  if (req.query.keyword != "") {
+    agexp[0].$search.compound.must = [
+      {
+        text: {
+          query: req.body.keyword,
+          // path: {
+          //   wildcard: "*",
+          // },
+          path:["abstract","title","keywords","listOfAuthors","typeOfPublication"],
+          fuzzy: {},
+        },
+      },
+      ...agexp[0].$search.compound.must,
+    ];
+  }
+  // console.log(agexp[0].$search.compound.must)
+  let pub = await publication.aggregate(agexp);
+
+  let temp = [];
+
+  pub.forEach((ele) => {
+    if (
+      !(
+        (ele.year == req.query.fYear &&
+          months.slice(0, monthMap.get(req.query.fMonth)).includes(ele.month)) ||
+        (ele.year == req.query.tYear &&
+          months.slice(monthMap.get(req.query.eMonth) + 1).includes(ele.month))
+      )
+    )
+      temp = [...temp, ele];
+    // console.log(`${ele.year}--${ele.month}`)
+  });
+  pub = [...temp];
+  const currentPage = Number(req.query.page) || 1;
+  let filteredPublicationsCount = pub.length;
+
+  const skip = resultPerPage * (currentPage - 1);
+  pub = pub.slice(skip, skip + resultPerPage);
+
+  res.status(200).json({
+    success: true,
+    publications: pub,
+    publicationsCount,
+    resultPerPage,
+    filteredPublicationsCount,
+    tPub: temp,
   });
 });
