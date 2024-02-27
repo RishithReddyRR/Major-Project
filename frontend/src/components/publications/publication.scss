@@ -12,8 +12,10 @@
   /* width: 60vw !important; */
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
   font-size: 1.05vmax;
+  position: relative;
 
 }
+
 
 .publication > div > p {
   margin: 0.2vmax;
@@ -29,8 +31,12 @@
 }
 .title {
   display: flex;
-  /* justify-content: center; */
+  justify-content:space-between;
   align-items: center;
+  
+}
+.title>div>b{
+  color:darkred;
 }
 .title > a {
   font-weight: bold;

@@ -12,6 +12,8 @@ import { logout } from "../../actions/userActions";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { MdDashboard } from "react-icons/md";
+import { FaRegBookmark } from "react-icons/fa6";
+
 const UserOptions = ({ user }) => {
   // console.log(user);
   const navigate = useNavigate();
@@ -27,9 +29,13 @@ const UserOptions = ({ user }) => {
   const adminPanel = () => {
     navigate("/admin/dashboard");
   };
+  const bookmarks = () => {
+    navigate("/bookmarks");
+  };
 
   let options = [
     { icon: <PersonIcon />, name: "Profile", func: account },
+    { icon: <FaRegBookmark />, name: "Bookmarks", func: bookmarks },
 
     { icon: <ExitToAppIcon />, name: "Logout", func: logoutUser },
   ];

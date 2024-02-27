@@ -16,6 +16,7 @@ import Publications from './components/publications/Publications';
 import Dashboard from './components/admin/Dashboard'
 import AdminPublications from './components/admin/AdminPublications.jsx'
 import PublicationDetails from './components/publications/PublicationDetails';
+import Bookmarks from './components/publications/Bookmarks.jsx';
 import UpdatePublication from './components/admin/UpdatePublication';
 import UploadPublication from './components/admin/UploadPublication.jsx';
 import UserPanel from './components/admin/UserPanel.jsx';
@@ -32,6 +33,7 @@ function App() {
         <Route path='/' element={<Home/>}/>
         <Route path='/login' element={<Login/>}/>
         <Route path='/register' element={<Register/>}/>
+        <Route path='/bookmarks' element={<Bookmarks/>}/>
         <Route path='/forgot-password' element={<Fpass/>}/>
         <Route path='/search' element={<Search/>}/>
         <Route path='/analytics' element={<Analytics/>}/>

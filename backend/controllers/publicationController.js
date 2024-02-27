@@ -328,13 +328,13 @@ exports.getPublications = asyncErrorHandler(async (req, res, next) => {
   // console.log("in dup");
   const resultPerPage = Number(req.query.ppp);
   const publicationsCount = await publication.countDocuments();
-  console.log(req.body.keyword)
+  // console.log(req.body.keyword)
   let arK=req.body.keyword.split(" ")
   if(arK.length>16){
     arK=arK.slice(0,17)
   }
   req.body.keyword=arK.join(" ")
-  console.log(req.body.keyword)
+  // console.log(req.body.keyword)
   const months = [
     "JANUARY",
     "FEBRUARY",
@@ -383,9 +383,9 @@ exports.getPublications = asyncErrorHandler(async (req, res, next) => {
             },
             {
               range: {
-                path: "year",
-                gte: Number(req.query.fYear),
-                lte: Number(req.query.tYear),
+                path: "dateOfPublication",
+                gte: Number(new Date(req.query.fYear).getTime()),
+                lte: Number(new Date(req.query.tYear).getTime()),
               },
             },
           ],
@@ -395,10 +395,11 @@ exports.getPublications = asyncErrorHandler(async (req, res, next) => {
     {
       $addFields: {
         score: { $meta: "searchScore" },
+        search:req.body.keyword==""?false:true
       },
     },
   ];
-  if (req.query.keyword != "") {
+  if (req.body.keyword != "") {
     agexp[0].$search.compound.must = [
       {
         text: {
@@ -418,23 +419,24 @@ exports.getPublications = asyncErrorHandler(async (req, res, next) => {
 
   let temp = [];
 
-  pub.forEach((ele) => {
-    if (
-      !(
-        (ele.year == req.query.fYear &&
-          months.slice(0, monthMap.get(req.query.fMonth)).includes(ele.month)) ||
-        (ele.year == req.query.tYear &&
-          months.slice(monthMap.get(req.query.eMonth) + 1).includes(ele.month))
-      )
-    )
-      temp = [...temp, ele];
-    // console.log(`${ele.year}--${ele.month}`)
-  });
-  pub = [...temp];
+  // pub.forEach((ele) => {
+  //   if (
+  //     !(
+  //       (ele.year == req.query.fYear &&
+  //         months.slice(0, monthMap.get(req.query.fMonth)).includes(ele.month)) ||
+  //       (ele.year == req.query.tYear &&
+  //         months.slice(monthMap.get(req.query.eMonth) + 1).includes(ele.month))
+  //     )
+  //   )
+  //     temp = [...temp, ele];
+  //   // console.log(`${ele.year}--${ele.month}`)
+  // });
+  // pub = [...temp];
   const currentPage = Number(req.query.page) || 1;
   let filteredPublicationsCount = pub.length;
 
   const skip = resultPerPage * (currentPage - 1);
+  pub.sort((a,b)=>b.noOfCitations-a.noOfCitations)
   pub = pub.slice(skip, skip + resultPerPage);
 
   res.status(200).json({

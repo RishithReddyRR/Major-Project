@@ -50,3 +50,20 @@
     font-size: 4vmax;
     cursor: pointer;
 }
+
+.admin-search{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: whitesmoke;
+    >input{
+        background-color: whitesmoke;
+        padding: .7vmax;
+        border: none;
+        font-size: 1vmax;
+    }
+    >svg{
+        font-size: 1.8vmax;
+        cursor: pointer;
+    }
+}

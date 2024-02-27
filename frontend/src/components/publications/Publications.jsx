@@ -135,7 +135,10 @@ const Publications = () => {
 
       {/* <div className="publications-display"> */}
       <div className="main-display">
-        <div className={`filterBox ${foc ? "f-b-open" : "f-b-close"}`} onClick={()=>setCurrentPageNo(1)}>
+        <div
+          className={`filterBox ${foc ? "f-b-open" : "f-b-close"}`}
+          onClick={() => setCurrentPageNo(1)}
+        >
           <FaWindowClose className="close" onClick={() => setFoc(!foc)} />
           <div className="categoryBox">
             <div className="categories">
@@ -173,62 +176,26 @@ const Publications = () => {
                 {" "}
                 <div className="categories">
                   {" "}
-                  <MdCalendarMonth /> Year
+                  <MdCalendarMonth /> Date
                 </div>
                 <div className="fty" style={{ textAlign: "center" }}>
-                  <select
+                  <input
+                    type="date"
                     className="date-filter from"
                     onChange={(event) => setFYear(event.target.value)}
                     value={fYear}
-                  >
-                    <option value={""}>From</option>
-                    {years.map((year) => (
-                      <option value={year.toString()}>{year}</option>
-                    ))}
-                  </select>
+                    placeholder="from"
+                  />
                   -
-                  <select
+                  <input
+                    type="date"
                     className="date-filter to"
-                    onChange={(event) => setTYear(event.target.value)}
+                    onChange={(event) => {
+                      // console.log(event.target.value)
+                      setTYear(event.target.value);
+                    }}
                     value={tYear}
-                  >
-                    <option value={""} disabled>
-                      To
-                    </option>
-                    {years.map((year) => (
-                      <option value={year.toString()}>{year}</option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-              <div className="line"></div>
-              <div className="month-filter">
-                <div className="categories">
-                  <BsCalendarMonth />
-                  Month
-                </div>
-                <div>
-                  <select
-                    className="date-filter"
-                    onChange={(event) => setFMonth(event.target.value)}
-                    value={fMonth}
-                  >
-                    <option value={""}>Month</option>
-                    {months.map((month) => (
-                      <option value={month.toString()}>{month}</option>
-                    ))}
-                  </select>
-                  -
-                  <select
-                    className="date-filter"
-                    onChange={(event) => setEMonth(event.target.value)}
-                    value={eMonth}
-                  >
-                    <option value={""}>Month</option>
-                    {months.map((month) => (
-                      <option value={month.toString()}>{month}</option>
-                    ))}
-                  </select>
+                  />
                 </div>
               </div>
             </div>

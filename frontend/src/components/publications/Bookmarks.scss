@@ -1,0 +1,37 @@
+.no-bookmarks{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100vh;
+    >h2{
+        color: red;
+    }
+}
+.bookmarks{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2vmax;
+    >div{
+        width: 80vw;
+        border: .2vmax solid rgba(0,0,0,.6);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        >button{
+            padding: 1vmax;
+            background-color: red;
+            color: white;
+            border: none;
+            font-size: 1vmax;
+            margin-bottom: 1vmax;
+            border-radius: .5vmax;
+          
+        }
+    }
+}
+button:active{
+    transform: scale(.9);
+}

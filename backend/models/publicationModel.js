@@ -65,6 +65,7 @@ const publicationSchema = new mongoose.Schema({
   specialization: String,
   comments: [String],
   link: String,
+  dateOfPublication:Number
 });
 
 // publicationSchema.plugin(uniqueValidator);

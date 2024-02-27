@@ -60,6 +60,7 @@ export const logout = () => async (dispatch) => {
   try {
     dispatch({type:"LOGOUT_REQUEST"})
     await axios.get('/user/logout',{credentials: 'same-origin' })
+    localStorage.clear()
     dispatch({ type: "LOGOUT_SUCCESS" });
   } catch (error) {
     dispatch({ type: "LOGOUT_FAIL", payload: error.response.data.message });

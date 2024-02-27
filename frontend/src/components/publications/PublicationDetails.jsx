@@ -5,13 +5,29 @@ import { useParams } from "react-router-dom";
 import { PuffLoader } from "react-spinners";
 import { getPublicationDetails } from "../../actions/publicationsAction";
 import { BiLinkExternal } from "react-icons/bi";
-import "./publicationDetails.css";
+import "./publicationDetails.scss";
 import { ToastContainer, toast } from "react-toastify";
 import MetaData from "../structure/MetaData";
+import { FaRegBookmark } from "react-icons/fa6";
 const PublicationDetails = () => {
   const { loading, publication, error } = useSelector(
     (state) => state.publicationDetails
-  );
+    );
+    const addToBookmarks=()=>{
+      let bms= JSON.parse(localStorage.getItem("bookmarks")||"[]")
+      bms.push(publication)
+      localStorage.setItem("bookmarks",JSON.stringify(bms))
+      toast.success("added to bookmarks", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+    }
   const dispatch = useDispatch();
   const { id } = useParams();
   useEffect(() => {
@@ -30,9 +46,11 @@ const PublicationDetails = () => {
       dispatch({ type: "CLEAR_ERRORS" });
     }
   }, [error]);
-  return loading && publication? (
-    <div className="loaderHead"> <PuffLoader color="#009900" size="20vmax" /></div>
-   
+  return loading && publication ? (
+    <div className="loaderHead">
+      {" "}
+      <PuffLoader color="#009900" size="20vmax" />
+    </div>
   ) : (
     <>
       <MetaData title={`${id}`} />
@@ -57,9 +75,9 @@ const PublicationDetails = () => {
 
           <p className="abstract">
             <p>Abstract:</p>
-            <div style={{marginLeft:"-1vmax"}}>{publication.abstract}</div>
+            <div style={{ marginLeft: "-1vmax" }}>{publication.abstract}</div>
           </p>
-          <p style={{ display: "flex",margin:"0" }}>
+          <p style={{ display: "flex", margin: "0" }}>
             <p>Authors:</p>
             <div className="keywords">
               {publication.listOfAuthors &&
@@ -68,7 +86,7 @@ const PublicationDetails = () => {
                 ))}
             </div>
           </p>
-          <p style={{ display: "flex",margin:"0"}}>
+          <p style={{ display: "flex", margin: "0" }}>
             <p>Keywords:</p>
             <div className="keywords">
               {publication.keywords &&
@@ -98,10 +116,12 @@ const PublicationDetails = () => {
             {publication.noOfCitations}
           </p>
           <p>{publication.identificationNumber}</p>
-        </div>
-
-        <div className="comments">
-          
+          <div className="bookmark" >
+            <button onClick={addToBookmarks}>
+              <FaRegBookmark />
+              Add to bookmark
+            </button>
+          </div>
         </div>
       </div>
       <ToastContainer />

@@ -1,5 +1,5 @@
 import React from "react";
-import "./publication.css";
+import "./publication.scss";
 import { Link } from "react-router-dom";
 const Publication = ({ pub, index }) => {
   return (
@@ -10,6 +10,12 @@ const Publication = ({ pub, index }) => {
             <a href={pub.url} target="blank">
               {`${index + 1})${pub.title.toUpperCase()}`}
             </a>
+            {pub.search && (
+              <div>
+                <b>Match Score:</b>
+                {pub.score}
+              </div>
+            )}
           </div>
           <div>
             <p>author:</p>

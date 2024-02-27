@@ -50,6 +50,34 @@
   animation-duration: 1s;
   animation-iteration-count: infinite;
 }
+.bookmark{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  >button{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1vmax;
+    background-color:firebrick;
+    color: white;
+    border: none;
+    border-radius:.5vmax;
+    &:hover{
+      background-color: rgba(178,34,34,.8);
+    }
+    &:active{
+      transform: scale(.9);
+    }
+
+  }
+}
+
+
+
+
+
 @keyframes link {
   from {
     background-color: chartreuse;

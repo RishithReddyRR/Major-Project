@@ -23,6 +23,9 @@ import { RiDoubleQuotesR } from "react-icons/ri";
 import { BsCalendarMonth } from "react-icons/bs";
 import { MdCalendarMonth } from "react-icons/md";
 import { BsFilterLeft } from "react-icons/bs";
+import { LuSearch } from "react-icons/lu";
+import { useNavigate } from "react-router-dom";
+
 const categories = [
   "All",
   "Journal",
@@ -35,11 +38,12 @@ const AdminPublications = () => {
   const { deleted, success, error } = useSelector(
     (state) => state.publicationsDelete
   );
-  const { keyword } = useParams();
   const dispatch = useDispatch();
   const [value, setValue] = useState([0, 1000]);
+  const [keyword, setKeyword] = useState("");
   const [ppp, setPpp] = useState(10);
   const [Pppp, setPPpp] = useState(10);
+  const navigate = useNavigate();
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -79,6 +83,7 @@ const AdminPublications = () => {
   const [fMonth, setFMonth] = useState("");
   const [eMonth, setEMonth] = useState("s");
   const [foc, setFoc] = useState(false);
+  const [key, setKey] = useState("");
   // console.log(fYear);
   // console.log(ppp);
   useEffect(() => {
@@ -124,6 +129,7 @@ const AdminPublications = () => {
         currentYear
       )
     );
+    setFoc(false)
   }, [
     dispatch,
     error,
@@ -158,13 +164,27 @@ const AdminPublications = () => {
             <RingLoader color="tomato" size="10vmax" />
           </div>
         ) : (
-          <div className="publications p-a ">
+          <div className="publications p-a " style={{ padding: "unset" }}>
             <BsFilterLeft className="filter-o-c" onClick={() => setFoc(!foc)} />
             <div
               className={`filterBox  filter-a ${
                 foc ? "f-b-a-open" : "f-b-a-close"
               }`}
             >
+              <div className="admin-search">
+                <input
+                  type="text"
+                  placeholder="search"
+                  value={key}
+                  onChange={(event) => setKey(event.target.value)}
+                />
+                <LuSearch
+                  onClick={() => {
+                    setKeyword(key);
+                  }}
+                />
+              </div>
+              <div className="line"></div>
               <FaWindowClose className="close-a" onClick={() => setFoc(!foc)} />
               <div className="categoryBox">
                 <div className="categories">
@@ -202,62 +222,26 @@ const AdminPublications = () => {
                     {" "}
                     <div className="categories">
                       {" "}
-                      <MdCalendarMonth /> Year
+                      <MdCalendarMonth /> Date
                     </div>
                     <div className="fty" style={{ textAlign: "center" }}>
-                      <select
+                      <input
+                        type="date"
                         className="date-filter from"
                         onChange={(event) => setFYear(event.target.value)}
                         value={fYear}
-                      >
-                        <option value={""}>From</option>
-                        {years.map((year) => (
-                          <option value={year.toString()}>{year}</option>
-                        ))}
-                      </select>
+                        placeholder="from"
+                      />
                       -
-                      <select
+                      <input
+                        type="date"
                         className="date-filter to"
-                        onChange={(event) => setTYear(event.target.value)}
+                        onChange={(event) => {
+                          // console.log(event.target.value)
+                          setTYear(event.target.value);
+                        }}
                         value={tYear}
-                      >
-                        <option value={""} disabled>
-                          To
-                        </option>
-                        {years.map((year) => (
-                          <option value={year.toString()}>{year}</option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-                  <div className="line"></div>
-                  <div className="month-filter">
-                    <div className="categories">
-                      <BsCalendarMonth />
-                      Month
-                    </div>
-                    <div>
-                      <select
-                        className="date-filter"
-                        onChange={(event) => setFMonth(event.target.value)}
-                        value={fMonth}
-                      >
-                        <option value={""}>Month</option>
-                        {months.map((month) => (
-                          <option value={month.toString()}>{month}</option>
-                        ))}
-                      </select>
-                      -
-                      <select
-                        className="date-filter"
-                        onChange={(event) => setEMonth(event.target.value)}
-                        value={eMonth}
-                      >
-                        <option value={""}>Month</option>
-                        {months.map((month) => (
-                          <option value={month.toString()}>{month}</option>
-                        ))}
-                      </select>
+                      />
                     </div>
                   </div>
                 </div>
@@ -296,8 +280,9 @@ const AdminPublications = () => {
                   />
                   <button
                     onClick={() => {
-                      setCurrentPageNo(1)
-                      setPPpp(ppp)}}
+                      setCurrentPageNo(1);
+                      setPPpp(ppp);
+                    }}
                     style={{ display: "none" }}
                   ></button>
                 </form>
@@ -314,9 +299,10 @@ const AdminPublications = () => {
                   className="delete-all-pubs"
                   style={{ backgroundColor: "red", marginLeft: ".5vmax" }}
                   onClick={() => {
-                    let res=window.confirm("are you sure,do you want to delete all publications?")
-                    if(res)
-                    dispatch(deleteAllPublications());
+                    let res = window.confirm(
+                      "are you sure,do you want to delete all publications?"
+                    );
+                    if (res) dispatch(deleteAllPublications());
                   }}
                 >
                   Delete All Publications

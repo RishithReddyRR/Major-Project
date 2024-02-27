@@ -235,6 +235,7 @@ body::-webkit-scrollbar {
 .to {
   width: 5vmax;
   margin: 0.5vmax;
+  cursor: pointer;
 }
 .date-filter > option {
   border: none;
@@ -365,6 +366,7 @@ total-publications {
   }
   .fty{
     width:23vmax;
+    
   }
   .from,.to{
     width:10vmax;
@@ -374,6 +376,7 @@ total-publications {
 }
   
 }
+
 
 @media screen and (max-width: 440px){
   .f-b-close {
