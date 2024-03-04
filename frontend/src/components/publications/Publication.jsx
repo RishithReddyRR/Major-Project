@@ -31,7 +31,7 @@ const Publication = ({ pub, index }) => {
           </div>
           <div>
             <p>Published On:</p>
-            <p>{`${pub.month},${pub.year}`}</p>
+            <p>{pub.date}</p>
           </div>
         </div>
       </Link>

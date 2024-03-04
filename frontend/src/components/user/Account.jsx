@@ -343,7 +343,7 @@ const Account = () => {
             ></div>
             <div>
               {publications != 0 ? (
-                publications.map((ele, idx) => {
+                publications&&publications.map((ele, idx) => {
                   return (
                     <Publication
                       key={ele._id}

@@ -31,7 +31,7 @@ const categories = [
 const Publications = () => {
   const { keyword } = useParams();
   const dispatch = useDispatch();
-  const [value, setValue] = useState([0, 1000]);
+  const [value, setValue] = useState([0, 100000]);
   const [ppp, setPpp] = useState(10);
   const [Pppp, setPPpp] = useState(10);
   const handleChange = (event, newValue) => {
@@ -68,7 +68,7 @@ const Publications = () => {
   } = useSelector((state) => state.userPublications);
   const [currentPage, setCurrentPageNo] = useState(1);
   const [category, setCategory] = useState("All");
-  const [fYear, setFYear] = useState("1900");
+  const [fYear, setFYear] = useState("1970");
   const [tYear, setTYear] = useState("");
   const [fMonth, setFMonth] = useState("");
   const [eMonth, setEMonth] = useState("s");
@@ -166,7 +166,7 @@ const Publications = () => {
             <Slider
               value={value}
               min={0}
-              max={1000}
+              max={100000}
               valueLabelDisplay="on"
               onChange={handleChange}
             />
@@ -174,7 +174,7 @@ const Publications = () => {
             <div className="year">
               <div className=" year-filter" style={{ marginTop: "1vmax" }}>
                 {" "}
-                <div className="categories">
+                <div className="categories" style={{flexDirection:"row"}}>
                   {" "}
                   <MdCalendarMonth /> Date
                 </div>

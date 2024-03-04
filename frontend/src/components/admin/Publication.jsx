@@ -52,7 +52,7 @@ const Publication = ({ pub, index }) => {
           </div>
           <div>
             <p>Published On:</p>
-            <p>{`${pub.month},${pub.year}`}</p>
+            <p>{pub.date}</p>
           </div>
           <div className="eddel">
             <Link to={`/admin/update/${pub._id}`} target="blank">

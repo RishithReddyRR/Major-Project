@@ -105,7 +105,7 @@ const PublicationDetails = () => {
           </p>
           <p>
             <p>Published On:</p>
-            {`${publication.month},${publication.year}`}
+            {publication.date}
           </p>
           <p>
             <p>Indexed In:</p>

@@ -60,7 +60,7 @@ export const getPublications =
   ) =>
   async (dispatch) => {
     keyword = keyword == undefined ? "" : keyword;
-    tYear = tYear == "" ? currentYear : tYear;
+    tYear = tYear == "" ? `${currentYear}-12-31` : tYear;
 
     try {
       const config = {

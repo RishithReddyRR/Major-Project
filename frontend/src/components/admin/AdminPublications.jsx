@@ -39,7 +39,7 @@ const AdminPublications = () => {
     (state) => state.publicationsDelete
   );
   const dispatch = useDispatch();
-  const [value, setValue] = useState([0, 1000]);
+  const [value, setValue] = useState([0, 100000]);
   const [keyword, setKeyword] = useState("");
   const [ppp, setPpp] = useState(10);
   const [Pppp, setPPpp] = useState(10);
@@ -212,7 +212,7 @@ const AdminPublications = () => {
                 <Slider
                   value={value}
                   min={0}
-                  max={1000}
+                  max={100000}
                   valueLabelDisplay="on"
                   onChange={handleChange}
                 />

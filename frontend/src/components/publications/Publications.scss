@@ -220,6 +220,7 @@ body::-webkit-scrollbar {
   min-height: 5vmax;
   >div{
     display: flex;
+    flex-direction: column;
   }
 }
 .date-filter {
@@ -233,7 +234,7 @@ body::-webkit-scrollbar {
 }
 .from,
 .to {
-  width: 5vmax;
+  width: 12vmax;
   margin: 0.5vmax;
   cursor: pointer;
 }
