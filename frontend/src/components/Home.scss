@@ -1,16 +1,45 @@
 @import "~react-image-gallery/styles/scss/image-gallery.scss";
 @import url('https://fonts.googleapis.com/css2?family=Alkatra&display=swap');
-.landing {
-  width: 100vw;
-  height: 92vh;
-  object-fit: cover;
-  filter: blur(.13vmax);
-}
+// .landing {
+//   width: 100vw;
+//   height: 92vh;
+//   object-fit: cover;
+//   filter: blur(.13vmax);
+// }
 #root {
   overflow: unset !important;
 }
+.total-publications{
+  background-color: #DA0C81
+  ;
+}
+
+
+#count-section{
+  margin-top: 0.8vmax;
+  >div{
+    height: 10vmax;
+    width: 10vmax;
+    font-size: 1.2vmax
+  }
+}
+.charts{
+  width: 100vw;
+  flex-wrap: wrap;
+  display: flex;
+  >div{
+    width: unset !important;
+  }
+}
+#loader{
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .landing-parent {
   position: relative;
+  
 
   .scroll-down {
     position: absolute;

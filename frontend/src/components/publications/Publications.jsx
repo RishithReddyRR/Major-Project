@@ -118,6 +118,7 @@ const Publications = () => {
     tYear,
   ]);
   const downloadAsWorkbook = () => {
+   
     const ws = utils.json_to_sheet(totalPublications);
     /* create workbook and append worksheet */
     const wb = utils.book_new();

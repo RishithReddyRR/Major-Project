@@ -22,7 +22,7 @@ const Dashboard = () => {
   };
   const dispatch = useDispatch();
   const navigate=useNavigate()
-  const { publications, publicationsCount, countArray, loading, yearCount,yearCountEach,error } =
+  const { publications, publicationsCount, countArray, loadingD, yearCount,yearCountEach,error } =
     useSelector((state) => state.publicationsAdmin);
   useEffect(() => {
     dispatch(getAdminPublications());
@@ -35,7 +35,7 @@ const Dashboard = () => {
     <div className="dashboard">
       <MetaData title={"admin--Dashboard"} />
       <SideBar />
-      {loading ? (
+      {loadingD ? (
         <div className="loader">
           <HashLoader color="tomato" size={"20vmax"} />
         </div>

@@ -31,10 +31,10 @@ export const publicationAdminReducer = createReducer(
   { publications: [] },
   {
     PUBLICATION_ADMIN_REQUEST: (state, action) => {
-      state.loading = true;
+      state.loadingD = true;
     },
     PUBLICATION_ADMIN_SUCCESS: (state, action) => {
-      state.loading = false;
+      state.loadingD = false;
       state.publications = action.payload.publications;
       state.publicationsCount = action.payload.publicationsCount;
       state.countArray = action.payload.countArray;
@@ -42,7 +42,7 @@ export const publicationAdminReducer = createReducer(
       state.yearCountEach = action.payload.yearCountEach;
     },
     PUBLICATION_ADMIN_FAIL: (state, action) => {
-      state.loading = false;
+      state.loadingD = false;
       state.error = action.payload;
     },
     CLEAR_ERRORS: (state, action) => {

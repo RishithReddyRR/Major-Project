@@ -437,6 +437,12 @@ exports.getPublications = asyncErrorHandler(async (req, res, next) => {
 
   const skip = resultPerPage * (currentPage - 1);
   pub.sort((a,b)=>b.noOfCitations-a.noOfCitations)
+  temp=pub
+ 
+  temp.forEach(entry => {
+    entry.keywords = entry.keywords.join(", "); // Convert array to comma-separated string
+    entry.listOfAuthors = entry.listOfAuthors.join(", "); 
+});
   pub = pub.slice(skip, skip + resultPerPage);
 
   res.status(200).json({
