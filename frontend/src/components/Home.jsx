@@ -9,7 +9,7 @@ import ImageGallery from "react-image-gallery";
 import { useDispatch, useSelector } from "react-redux";
 import "./Home.scss";
 import { useEffect } from "react";
-import { getPublicationsHome } from "../actions/publicationsAction";
+import { getPublicationsCountHome, getPublicationsHome } from "../actions/publicationsAction";
 import Publication from "./publications/Publication";
 import { Link } from "react-router-dom";
 import { allImages } from "../actions/imageActions";
@@ -56,7 +56,7 @@ const Home = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(allImages());
-    dispatch(getAdminPublications());
+    dispatch(getPublicationsCountHome());
     dispatch(getPublicationsHome());
   }, []);
   return (

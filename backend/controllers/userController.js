@@ -1,12 +1,16 @@
 const { asyncErrorHandler } = require("../middleware/catchAsyncError");
 const user = require("../models/userModel");
 const ErrorHandler = require("../utils/errorHandler");
+const generateKeywords = require("../utils/generatingKeywords");
+const publication = require("../models/publicationModel");
+
 const sendToken = require("../utils/jwttoken");
 const { sendEmail } = require("../utils/sendEmail.js");
 const crypto = require("crypto");
 const cloudinary = require("cloudinary");
 const cheerio = require("cheerio");
 const axios = require("axios");
+
 require("dotenv").config({
   path: "../config/.env",
 });
@@ -162,6 +166,16 @@ exports.updatePassword = asyncErrorHandler(async (req, res, next) => {
   await u.save();
   sendToken(u, 200, res);
 });
+//update password
+exports.updatePasswords = asyncErrorHandler(async (req, res, next) => {
+  const users = await user.find({});
+  for (let i = 0; i < users.length; i++) {
+    const u = await user.findById(users[i]._id).select("+password");
+    u.password = "user@1234";
+    await u.save();
+  }
+  res.json({success:true});
+});
 
 //update profile
 exports.updateProfile = asyncErrorHandler(async (req, res, next) => {
@@ -192,46 +206,144 @@ exports.temp = asyncErrorHandler(async (req, res) => {
 });
 //scrap the details
 exports.scrapDetails = asyncErrorHandler(async (req, res) => {
-  const gsUrl = req.user.gsProfile;
-  const wosUrl = req.user.wosProfile;
-  const scopusUrl = req.user.scopusProfile;
-  const vidwanUrl = req.user.vidwanProfile;
-  //scrap google scholar
-  let response = await axios.get(gsUrl);
+  res.setHeader("Cache-Control", "no-cache");
+  const wait = (n) => new Promise((resolve) => setTimeout(resolve, n));
+  let gsUrl = req.user.gsProfile;
+  // scrap google scholar
+  let response = await axios.get(`${gsUrl}&cstart=0&pagesize=1000`, {
+    headers: {
+      "User-Agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36",
+    },
+  });
+  // let response = await axios.get(`https://scholar.google.co.in/citations?user=sGJSZ1AAAAAJ&hl=en&cstart=0&pagesize=1000`, {
+  //   headers: {
+  //     "User-Agent":
+  //       "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36",
+  //   },
+  // });
+
   let data = response.data;
   let $ = cheerio.load(data);
-  ele = $(".gsc_rsb_std");
-  // console.log($(ele[0]).text())
-  // console.log($(ele[2]).text())
-  const gsCitations = $(ele[0]).text();
-  const gsHIndex = $(ele[2]).text();
-  //scrap vidwan
-  response = await axios.get(vidwanUrl);
-  data = response.data;
-  $ = cheerio.load(data);
-  const vidwanScore = $("span.pull-right").text();
-  console.log(vidwanScore);
-  //scrapping scopus
-  let config = {
-    headers: {
-      method: "GET",
-      scheme: "https",
-      accept:
-        "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-      "accept-encoding": "gzip, deflate, sdch, br",
-      "accept-language": "en-US,en;q=0.8",
-      "cache-control": "no-cache",
-      pragma: "no-cache",
-      referer: "https://www.google.com/",
-      "upgrade-insecure-requests": "1",
-      "user-agent":
-        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36",
-    },
+
+  let ele = $(".gsc_a_at");
+  let len = $(ele).length;
+  console.log(len);
+  const monthDictionary = {
+    1: "January",
+    2: "February",
+    3: "March",
+    4: "April",
+    5: "May",
+    6: "June",
+    7: "July",
+    8: "August",
+    9: "September",
+    10: "October",
+    11: "November",
+    12: "December",
   };
-  response = await axios.get(scopusUrl, config);
-  console.log(response.data);
+  const top = ["Journal", "Conference", "Book", "Patent office"];
+  let publications = [];
+  for (let i = 0; i < len; i++) {
+    let url = $(ele[i]).attr("href");
+    let resp = await axios.get(`https://scholar.google.co.in/${url}`, {
+      headers: {
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36",
+      },
+    });
+    let publication = {};
+    publication.publicationDetails = "";
+    publication.abstract = "";
+    let d = resp.data;
+    let x = cheerio.load(d);
+    publication.nameOfAuthor = req.user.name;
+    let e = x(".gsc_oci_title_link");
+    if (x(e[0]).attr("href").length != 0) {
+      publication.url = x(e[0]).attr("href");
+    } else {
+      publication.url = `https://scholar.google.co.in/${url}`;
+    }
+    publication.title = x(e[0]).text();
+    e = x(".gs_scl");
+    e.each((idx, ele) => {
+      if (
+        x(ele).find(".gsc_oci_field").text() == "Authors" ||
+        x(ele).find(".gsc_oci_field").text() == "Inventors"
+      ) {
+        publication.listOfAuthors = x(ele).find(".gsc_oci_value").text();
+      } else if (x(ele).find(".gsc_oci_field").text() == "Publication date") {
+        let arr = x(ele).find(".gsc_oci_value").text().split("/");
+        if (arr.length == 0) {
+          publication.dateOfPublication = "1970-01-01";
+          publication.month = monthDictionary[1];
+          publication.year = "1970";
+        } else if (arr.length == 1) {
+          publication.dateOfPublication = `${arr[0]}-01-01`;
+          publication.month = monthDictionary[1];
+          publication.year = arr[0];
+        } else if (arr.length == 2) {
+          publication.dateOfPublication = `${arr[0]}-${
+            Number(arr[1]) < 10 ? `0${arr[1]}` : arr[1]
+          }-01`;
+          publication.month = monthDictionary[Number(arr[1])];
+          publication.year = arr[0];
+        } else {
+          if (Number(arr[1]) < 10) {
+            arr[1] = `0${arr[1]}`;
+          }
+          if (Number(arr[2]) < 10) {
+            arr[2] = `0${arr[2]}`;
+          }
+          publication.dateOfPublication = arr.join("-");
+          publication.month = monthDictionary[Number(arr[1])];
+          publication.year = arr[0];
+        }
+        publication.dateOfPublication = new Date(
+          publication.dateOfPublication
+        ).getTime();
+      } else if (top.includes(x(ele).find(".gsc_oci_field").text())) {
+        publication.typeOfPublication = x(ele).find(".gsc_oci_field").text();
+        publication.nameOfPublicationPlatform = x(ele)
+          .find(".gsc_oci_value")
+          .text();
+      } else if (
+        x(ele).find(".gsc_oci_field").text() == "Pages" ||
+        x(ele).find(".gsc_oci_field").text() == "Volume" ||
+        x(ele).find(".gsc_oci_field").text() == "Issue" ||
+        x(ele).find(".gsc_oci_field").text() == "Publisher"
+      ) {
+        publication.publicationDetails += `${x(ele)
+          .find(".gsc_oci_field")
+          .text()}:${x(ele).find(".gsc_oci_value").text()},`;
+      } else if (x(ele).find(".gsc_oci_field").text() == "Description") {
+        publication.abstract = x(ele).find(".gsc_oci_value").text();
+      } else if (x(ele).find(".gsc_oci_field").text() == "Total citations") {
+        let y = x(ele).find("a");
+        publication.noOfCitations = x(y[0]).text().split(" ")[2];
+      }
+    });
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    let keywords = await axios.post(
+      "http://127.0.0.1:5000/keywords",
+      { text: publication.abstract },
+      config
+    );
+    publication.keywords = keywords.data.keywords;
+    publications = [...publications, publication];
+
+    // console.log(publication);
+  }
+  publication.deleteMany({ nameOfAuthor: req.user.name });
+  publication.insertMany(publications);
 
   res.json({
     success: true,
+    publications,
   });
 });

@@ -309,10 +309,13 @@
     align-items: center;
   }
   > div:nth-child(2) {
-    width: 28%;
+    width: 45%;
     margin-bottom: 0.5vmax;
+    display: flex;
+    justify-content: space-around;
     > button {
       width: 48%;
+      margin:0 1vmax;
       text-align: center;
       padding: 0.6vmax 0.7vmax;
       font-size: 1.3vmax;

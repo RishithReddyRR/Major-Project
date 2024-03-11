@@ -12,7 +12,7 @@ import vidwanIcon from "../../images/vidwanIcon.png";
 import { useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { BarChart } from "@mui/x-charts/BarChart";
-
+import { CirclesWithBar } from "react-loader-spinner";
 import {
   getUserPublications,
   uploadPublications,
@@ -30,10 +30,16 @@ import { Doughnut } from "react-chartjs-2";
 import Modal from "@mui/material/Modal";
 import { MdOutlineClose } from "react-icons/md";
 import { RingLoader } from "react-spinners";
+import { scrapUserPublications } from "../../actions/userActions";
 
 ChartJs.register(ArcElement, Tooltip, Legend);
 const Account = () => {
   const { user, loading } = useSelector((state) => state.user);
+  const {
+    loading:loadingS,
+    success,
+    error:errorS,
+  } = useSelector((state) => state.scrapUserPubs);
   const chartSetting = {
     yAxis: [
       {
@@ -86,10 +92,24 @@ const Account = () => {
     dispatch(uploadPublications(file));
   };
   const dispatch = useDispatch();
+
   useEffect(() => {
     dispatch(getUserPublications(user.name, currentPage));
     if (error) {
       toast.error(error, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+      dispatch({ type: "CLEAR_ERRORS" });
+    }
+    if (errorS) {
+      toast.error(errorS, {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -128,8 +148,21 @@ const Account = () => {
       handleClose();
       dispatch({ type: "CLEAR_ERRORS" });
     }
+    if (success) {
+      toast.success("Publications Successfully fetched", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+      dispatch({ type: "CLEAR_ERRORS" });
+    }
     // console.log(file)
-  }, [error, currentPage, ob.error, ob.success, loading]);
+  }, [error, currentPage, ob.error, ob.success, loading, success, errorS]);
   const downloadAsWorkbook = () => {
     const ws = utils.json_to_sheet(totalPublications);
     /* create workbook and append worksheet */
@@ -194,29 +227,28 @@ const Account = () => {
           </div>
 
           <div className="section-2">
-          {yearCount && (
-            <div className="pie-chart">
-              <BarChart
-                dataset={yearCount}
-                xAxis={[{ scaleType: "band", dataKey: "year"}]}
-                series={[{ dataKey: "count", label: "publications count" }]}
-                {...chartSetting}
-              />
-              <p>Last 15 years publications</p>
-            </div>
-          )}
-          {yearCitationsCount && (
-            <div className="pie-chart">
-              <BarChart
-                dataset={yearCitationsCount}
-                xAxis={[{ scaleType: "band", dataKey: "year"}]}
-                series={[{ dataKey: "count", label: "citations count" }]}
-                {...chartSetting}
-              />
-              <p>Last 15 years Citations</p>
-            </div>
-          )}
-
+            {yearCount && (
+              <div className="pie-chart">
+                <BarChart
+                  dataset={yearCount}
+                  xAxis={[{ scaleType: "band", dataKey: "year" }]}
+                  series={[{ dataKey: "count", label: "publications count" }]}
+                  {...chartSetting}
+                />
+                <p>Last 15 years publications</p>
+              </div>
+            )}
+            {yearCitationsCount && (
+              <div className="pie-chart">
+                <BarChart
+                  dataset={yearCitationsCount}
+                  xAxis={[{ scaleType: "band", dataKey: "year" }]}
+                  series={[{ dataKey: "count", label: "citations count" }]}
+                  {...chartSetting}
+                />
+                <p>Last 15 years Citations</p>
+              </div>
+            )}
           </div>
           <div className="section-3">
             <h1>Research Activities</h1>
@@ -279,7 +311,7 @@ const Account = () => {
           <div className="section-5">
             <h1>Publications</h1>
             <div className="pb-filter">
-              <div className="total-publications">
+              <div className="total-publications" style={{backgroundColor:"unset"}}>
                 <b>Publications:</b>
                 {`(${10 * (currentPage - 1) + 1}-${
                   currentPage * 10
@@ -293,6 +325,10 @@ const Account = () => {
                 >
                   Download
                 </button>
+                <button className="upload-pub" onClick={()=>{
+                  console.log("hello")
+                  dispatch(scrapUserPublications())
+                }} >Fetch GS</button>
                 <button
                   className="upload-pub"
                   onClick={handleOpen}
@@ -342,8 +378,22 @@ const Account = () => {
               style={{ width: "95%", marginTop: "0" }}
             ></div>
             <div>
-              {publications != 0 ? (
-                publications&&publications.map((ele, idx) => {
+              {loadingS ? (
+                <CirclesWithBar
+                  height="100"
+                  width="100"
+                  color="#4fa94d"
+                  outerCircleColor="#4fa94d"
+                  innerCircleColor="#4fa94d"
+                  barColor="#4fa94d"
+                  ariaLabel="circles-with-bar-loading"
+                  wrapperStyle={{}}
+                  wrapperClass=""
+                  visible={true}
+                />
+              ) : publications != 0 ? (
+                publications &&
+                publications.map((ele, idx) => {
                   return (
                     <Publication
                       key={ele._id}

@@ -17,7 +17,7 @@ exports.getPublicationsOfUser = asyncErrorHandler(async (req, res, next) => {
   const currentPage = Number(req.query.page) || 1;
 
   const skip = resultPerPage * (currentPage - 1);
-  let publications = await publication.find({ listOfAuthors: {$regex:name,$options:"i"} });
+  let publications = await publication.find({ nameOfAuthor: {$regex:name,$options:"i"} });
   let publicationsCount = publications.length;
   let tPub = [...publications];
   publications = await publication
@@ -27,7 +27,7 @@ exports.getPublicationsOfUser = asyncErrorHandler(async (req, res, next) => {
   let tempP;
   let countArray = [];
   tempP = await publication.find({
-    listOfAuthors: {$regex:name,$options:"i"} ,
+    nameOfAuthor: {$regex:name,$options:"i"} ,
     typeOfPublication: {
       $regex: "journal",
       $options: "i",
@@ -35,7 +35,7 @@ exports.getPublicationsOfUser = asyncErrorHandler(async (req, res, next) => {
   });
   countArray.push(tempP.length);
   tempP = await publication.find({
-    listOfAuthors: {$regex:name,$options:"i"} ,
+    nameOfAuthor: {$regex:name,$options:"i"} ,
     typeOfPublication: {
       $regex: "book chapter",
       $options: "i",
@@ -43,7 +43,7 @@ exports.getPublicationsOfUser = asyncErrorHandler(async (req, res, next) => {
   });
   countArray.push(tempP.length);
   tempP = await publication.find({
-    listOfAuthors: {$regex:name,$options:"i"} ,
+    nameOfAuthor: {$regex:name,$options:"i"} ,
     typeOfPublication: {
       $regex: "conference",
       $options: "i",
@@ -51,7 +51,7 @@ exports.getPublicationsOfUser = asyncErrorHandler(async (req, res, next) => {
   });
   countArray.push(tempP.length);
   tempP = await publication.find({
-    listOfAuthors: {$regex:name,$options:"i"} ,
+    nameOfAuthor: {$regex:name,$options:"i"} ,
     typeOfPublication: {
       $regex: "patent",
       $options: "i",
@@ -59,7 +59,7 @@ exports.getPublicationsOfUser = asyncErrorHandler(async (req, res, next) => {
   });
   countArray.push(tempP.length);
   tempP = await publication.find({
-    listOfAuthors: {$regex:name,$options:"i"} ,
+    nameOfAuthor: {$regex:name,$options:"i"} ,
     typeOfPublication: {
       $regex: "copyright",
       $options: "i",
@@ -73,7 +73,7 @@ exports.getPublicationsOfUser = asyncErrorHandler(async (req, res, next) => {
   const yearCount = [];
   for (let i = 0; i < 15; i++) {
     const x = await publication.find({
-      listOfAuthors: {$regex:name,$options:"i"} ,
+      nameOfAuthor: {$regex:name,$options:"i"} ,
       year: currentYear - i,
     });
     let ob = {
@@ -86,7 +86,7 @@ exports.getPublicationsOfUser = asyncErrorHandler(async (req, res, next) => {
   const yearCitationsCount = [];
   for (let i = 0; i < 15; i++) {
     const x = await publication.find({
-      listOfAuthors: {$regex:name,$options:"i"} ,
+      nameOfAuthor: {$regex:name,$options:"i"} ,
       year: currentYear - i,
     });
     let c = 0;
@@ -158,6 +158,145 @@ exports.getPublicationDetails = asyncErrorHandler(async (req, res, next) => {
 //get publications counts for @admin
 
 exports.getPublicationsAdmin = asyncErrorHandler(async (req, res, next) => {
+  const pub = await publication.find({});
+  const publicationsCount = pub.length;
+  let countArray = [];
+  tempP = await publication.find({
+    typeOfPublication: {
+      $regex: "journal",
+      $options: "i",
+    },
+  });
+  countArray.push(tempP.length);
+  tempP = await publication.find({
+    $or: [
+      {
+        typeOfPublication: {
+          $regex: "book chapter",
+          $options: "i",
+        },
+      },
+      {
+        typeOfPublication: {
+          $regex: "bookchapter",
+          $options: "i",
+        },
+      },
+    ],
+  });
+  countArray.push(tempP.length);
+  tempP = await publication.find({
+    typeOfPublication: {
+      $regex: "conference",
+      $options: "i",
+    },
+  });
+  countArray.push(tempP.length);
+  tempP = await publication.find({
+    typeOfPublication: {
+      $regex: "patent",
+      $options: "i",
+    },
+  });
+  countArray.push(tempP.length);
+  tempP = await publication.find({
+    typeOfPublication: {
+      $regex: "copyright",
+      $options: "i",
+    },
+  });
+  countArray.push(tempP.length);
+  //year wise count
+  const currentDate = new Date();
+  const currentYear = currentDate.getFullYear();
+  const yearCount = [];
+  for (let i = 0; i < 15; i++) {
+    const x = await publication.find({ year: currentYear - i });
+    let ob = {
+      year: currentYear - i,
+      count: x.length,
+    };
+    yearCount.unshift(ob);
+  }
+  const yearCountEach = [];
+  for (let i = 0; i < 10; i++) {
+    const cJ = await publication.find({
+      $and: [
+        { year: currentYear - i },
+        {
+          typeOfPublication: {
+            $regex: "journal",
+            $options: "i",
+          },
+        },
+      ],
+    });
+    const cB = await publication.find({
+      $and: [
+        { year: currentYear - i },
+        {
+          typeOfPublication: {
+            $regex: "Book chapter",
+            $options: "i",
+          },
+        },
+      ],
+    });
+    const cC = await publication.find({
+      $and: [
+        { year: currentYear - i },
+        {
+          typeOfPublication: {
+            $regex: "conference",
+            $options: "i",
+          },
+        },
+      ],
+    });
+    const cP = await publication.find({
+      $and: [
+        { year: currentYear - i },
+        {
+          typeOfPublication: {
+            $regex: "patent",
+            $options: "i",
+          },
+        },
+      ],
+    });
+    const cCR = await publication.find({
+      $and: [
+        { year: currentYear - i },
+        {
+          typeOfPublication: {
+            $regex: "copyright",
+            $options: "i",
+          },
+        },
+      ],
+    });
+    let ob = {
+      year: currentYear - i,
+      countJ: cJ.length,
+      countB: cB.length,
+      countC: cC.length,
+      countP: cP.length,
+      countCR: cCR.length,
+    };
+    yearCountEach.unshift(ob);
+  }
+  res.status(200).json({
+    success: true,
+    // publications: pub,
+    publicationsCount,
+    countArray,
+    yearCount,
+    yearCountEach,
+  });
+});
+//get publications counts for @admin
+
+exports.getPublicationsHome = asyncErrorHandler(async (req, res, next) => {
   const pub = await publication.find({});
   const publicationsCount = pub.length;
   let countArray = [];

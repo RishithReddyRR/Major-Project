@@ -1,0 +1,7 @@
+import yake
+kw_extractor = yake.KeywordExtractor(top=10, stopwords=None)
+x = kw_extractor.extract_keywords("Image fusion is a method of combining the Multispectral (MS) and Panchromatic (PAN) images into one image contains more information than any of the input. Image fusion aim is to decrease unknown and weaken common data in the fused output image at the same time improving necessary information. Fused images are helpful in various applications like, remote sensing, computer vision, biometrics, change detection, image analysis and image classification. Conventional fusion methods are having some side effects like assertive spatial information and uncertain color information is an usually the problem in PCA and wavelet transform based fusion is a computationally in depth process. In order to overcome these side effects and to propose alternative soft computing fusion approach for conventional fusion methods we exploit image fusion using fuzzy logic technique to fuse two source images obtained from different sensors to enhance both spectral and spatial information. The proposed work here further compared with two common fusion methods like, principal component analysis (PCA) and wavelet transform along with quality assessment metrics. Exploratory outputs demonstrated in")
+keywords=[]
+for kw, v in x:
+    keywords.append(kw)
+print(keywords)

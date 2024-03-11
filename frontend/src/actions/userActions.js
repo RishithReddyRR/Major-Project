@@ -66,3 +66,21 @@ export const logout = () => async (dispatch) => {
     dispatch({ type: "LOGOUT_FAIL", payload: error.response.data.message });
   }
 }
+//scrap user publications
+
+export const scrapUserPublications = () => async (dispatch) => {
+  try {
+    dispatch({ type: "PUBLICATION_SCRAP_REQUEST" });
+
+    const { data } = await axios.put(`/user/scrap_user_pubs`);
+    dispatch({
+      type: "PUBLICATION_SCRAP_SUCCESS",
+    });
+  } catch (error) {
+    dispatch({
+      type: "PUBLICATION_SCRAP_FAIL",
+      payload: error.response.data.message,
+      // payload: error,
+    });
+  }
+};

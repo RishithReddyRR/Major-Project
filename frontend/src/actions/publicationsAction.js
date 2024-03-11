@@ -43,6 +43,25 @@ export const getAdminPublications = () => async (dispatch) => {
     });
   }
 };
+//get Admin publications
+export const getPublicationsCountHome = () => async (dispatch) => {
+  try {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    dispatch({ type: "PUBLICATION_ADMIN_REQUEST" });
+    const { data } = await axios.get(`/publication/publicationsCount-for-home`, config);
+    dispatch({ type: "PUBLICATION_ADMIN_SUCCESS", payload: data });
+  } catch (error) {
+    dispatch({
+      type: "PUBLICATION_ADMIN_FAIL",
+      payload: error.response.data.message,
+    });
+  }
+};
 
 export const getPublications =
   (

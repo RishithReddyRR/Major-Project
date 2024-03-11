@@ -135,3 +135,23 @@ export const publicationDeleteReducer = createReducer(
     },
   }
 );
+export const publicationUserScrap = createReducer(
+  { error: null, loading: false, success: false },
+  {
+    PUBLICATION_SCRAP_REQUEST: (state, action) => {
+      state.loading = true;
+    },
+    PUBLICATION_SCRAP_SUCCESS: (state, action) => {
+      state.loading = false;
+      state.success = true;
+    },
+    PUBLICATION_SCRAP_FAIL: (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
+    CLEAR_ERRORS: (state, action) => {
+      state.error = null;
+      state.success = false;
+    },
+  }
+);

@@ -23,7 +23,7 @@ import { FaWindowClose } from "react-icons/fa";
 const categories = [
   "All",
   "Journal",
-  "Book Chapter",
+  "Book",
   "Conference",
   "Patent",
   "Copyright",
@@ -205,7 +205,7 @@ const Publications = () => {
         <div className="publications">
           <p>Publications</p>
           <div className="b-filter">
-            <div className="total-publications">
+            <div className="total-publications" style={{backgroundColor:"unset"}}>
               <BsFilterLeft
                 className="filter-side"
                 onClick={() => setFoc(!foc)}
