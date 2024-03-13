@@ -1,6 +1,6 @@
 const express=require('express');
 const { uploadUsers } = require('../controllers/fileUploadController');
-const { createUser,userLogin, logout, forgotPassword, resetPassword, getUserDetails, updatePassword, updateProfile, temp, scrapDetails, updatePasswords } = require('../controllers/userController');
+const { createUser,userLogin, logout, forgotPassword, resetPassword, getUserDetails, updatePassword, updateProfile, temp, scrapDetails, updatePasswords, scrapAllPublications } = require('../controllers/userController');
 const { isAuthenticatedUser } = require('../middleware/auth');
 
 //route for creaing user
@@ -16,5 +16,6 @@ router.route('/update_passwords').put(updatePasswords)
 router.route('/update_profile').put(isAuthenticatedUser,updateProfile)
 router.route('/update').put(temp)
 router.route('/scrap_user_pubs').put(isAuthenticatedUser,scrapDetails)
+router.route('/scrap_all_pubs').put(scrapAllPublications)
 
 module.exports=router

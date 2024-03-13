@@ -174,7 +174,7 @@ exports.updatePasswords = asyncErrorHandler(async (req, res, next) => {
     u.password = "user@1234";
     await u.save();
   }
-  res.json({success:true});
+  res.json({ success: true });
 });
 
 //update profile
@@ -260,7 +260,7 @@ exports.scrapDetails = asyncErrorHandler(async (req, res) => {
     let x = cheerio.load(d);
     publication.nameOfAuthor = req.user.name;
     let e = x(".gsc_oci_title_link");
-    if (x(e[0]).attr("href").length != 0) {
+    if (x(e[0]).attr("href") != "") {
       publication.url = x(e[0]).attr("href");
     } else {
       publication.url = `https://scholar.google.co.in/${url}`;
@@ -338,6 +338,155 @@ exports.scrapDetails = asyncErrorHandler(async (req, res) => {
     publications = [...publications, publication];
 
     // console.log(publication);
+  }
+  publication.deleteMany({ nameOfAuthor: req.user.name });
+  publication.insertMany(publications);
+
+  res.json({
+    success: true,
+    publications,
+  });
+});
+//scrap the details
+exports.scrapAllPublications = asyncErrorHandler(async (req, res) => {
+  let users = await user.find({
+    $and: [{ department: "IT" }, { gsProfile: { $ne: "" } }],
+  });
+  const wait = (n) => new Promise((resolve) => setTimeout(resolve, n));
+
+  for (let j = 0; j < users.length; j++) {
+    let gsUrl = users[j].gsProfile;
+    // scrap google scholar
+    let response = await axios.get(`${gsUrl}&cstart=0&pagesize=1000`, {
+      headers: {
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36",
+      },
+    });
+    // let response = await axios.get(`https://scholar.google.co.in/citations?user=sGJSZ1AAAAAJ&hl=en&cstart=0&pagesize=1000`, {
+    //   headers: {
+    //     "User-Agent":
+    //       "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36",
+    //   },
+    // });
+
+    let data = response.data;
+    let $ = cheerio.load(data);
+
+    let ele = $(".gsc_a_at");
+    let len = $(ele).length;
+    console.log(len);
+    const monthDictionary = {
+      1: "January",
+      2: "February",
+      3: "March",
+      4: "April",
+      5: "May",
+      6: "June",
+      7: "July",
+      8: "August",
+      9: "September",
+      10: "October",
+      11: "November",
+      12: "December",
+    };
+    const top = ["Journal", "Conference", "Book", "Patent office"];
+    let publications = [];
+    for (let i = 0; i < len; i++) {
+      let url = $(ele[i]).attr("href");
+      let resp = await axios.get(`https://scholar.google.co.in/${url}`, {
+        headers: {
+          "User-Agent":
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36",
+        },
+      });
+      let publication = {};
+      publication.publicationDetails = "";
+      publication.abstract = "";
+      let d = resp.data;
+      let x = cheerio.load(d);
+      publication.nameOfAuthor = users[j].name;
+      let e = x(".gsc_oci_title_link");
+      if (x(e[0]).attr("href") != "") {
+        publication.url = x(e[0]).attr("href");
+      } else {
+        publication.url = `https://scholar.google.co.in/${url}`;
+      }
+      publication.title = x(e[0]).text();
+      e = x(".gs_scl");
+      e.each((idx, ele) => {
+        if (
+          x(ele).find(".gsc_oci_field").text() == "Authors" ||
+          x(ele).find(".gsc_oci_field").text() == "Inventors"
+        ) {
+          publication.listOfAuthors = x(ele).find(".gsc_oci_value").text();
+        } else if (x(ele).find(".gsc_oci_field").text() == "Publication date") {
+          let arr = x(ele).find(".gsc_oci_value").text().split("/");
+          if (arr.length == 0) {
+            publication.dateOfPublication = "1970-01-01";
+            publication.month = monthDictionary[1];
+            publication.year = "1970";
+          } else if (arr.length == 1) {
+            publication.dateOfPublication = `${arr[0]}-01-01`;
+            publication.month = monthDictionary[1];
+            publication.year = arr[0];
+          } else if (arr.length == 2) {
+            publication.dateOfPublication = `${arr[0]}-${
+              Number(arr[1]) < 10 ? `0${arr[1]}` : arr[1]
+            }-01`;
+            publication.month = monthDictionary[Number(arr[1])];
+            publication.year = arr[0];
+          } else {
+            if (Number(arr[1]) < 10) {
+              arr[1] = `0${arr[1]}`;
+            }
+            if (Number(arr[2]) < 10) {
+              arr[2] = `0${arr[2]}`;
+            }
+            publication.dateOfPublication = arr.join("-");
+            publication.month = monthDictionary[Number(arr[1])];
+            publication.year = arr[0];
+          }
+          publication.dateOfPublication = new Date(
+            publication.dateOfPublication
+          ).getTime();
+        } else if (top.includes(x(ele).find(".gsc_oci_field").text())) {
+          publication.typeOfPublication = x(ele).find(".gsc_oci_field").text();
+          publication.nameOfPublicationPlatform = x(ele)
+            .find(".gsc_oci_value")
+            .text();
+        } else if (
+          x(ele).find(".gsc_oci_field").text() == "Pages" ||
+          x(ele).find(".gsc_oci_field").text() == "Volume" ||
+          x(ele).find(".gsc_oci_field").text() == "Issue" ||
+          x(ele).find(".gsc_oci_field").text() == "Publisher"
+        ) {
+          publication.publicationDetails += `${x(ele)
+            .find(".gsc_oci_field")
+            .text()}:${x(ele).find(".gsc_oci_value").text()},`;
+        } else if (x(ele).find(".gsc_oci_field").text() == "Description") {
+          publication.abstract = x(ele).find(".gsc_oci_value").text();
+        } else if (x(ele).find(".gsc_oci_field").text() == "Total citations") {
+          let y = x(ele).find("a");
+          publication.noOfCitations = x(y[0]).text().split(" ")[2];
+        }
+      });
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+      let keywords = await axios.post(
+        "http://127.0.0.1:5000/keywords",
+        { text: publication.abstract },
+        config
+      );
+      publication.keywords = keywords.data.keywords;
+      publications = [...publications, publication];
+
+      console.log(publication);
+      await wait(60000)
+    }
   }
   publication.deleteMany({ nameOfAuthor: req.user.name });
   publication.insertMany(publications);

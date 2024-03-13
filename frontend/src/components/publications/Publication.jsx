@@ -2,6 +2,7 @@ import React from "react";
 import "./publication.scss";
 import { Link } from "react-router-dom";
 const Publication = ({ pub, index }) => {
+  let date=new Date(pub.dateOfPublication)
   return (
     <>
       <Link to={`/publication/${pub._id}`} className="link" target={"blank"}>
@@ -31,7 +32,7 @@ const Publication = ({ pub, index }) => {
           </div>
           <div>
             <p>Published On:</p>
-            <p>{pub.date}</p>
+            <p>{`${date.getDate()}-${date.getDay()}-${date.getFullYear()}`}</p>
           </div>
         </div>
       </Link>

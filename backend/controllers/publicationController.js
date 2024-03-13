@@ -17,17 +17,18 @@ exports.getPublicationsOfUser = asyncErrorHandler(async (req, res, next) => {
   const currentPage = Number(req.query.page) || 1;
 
   const skip = resultPerPage * (currentPage - 1);
-  let publications = await publication.find({ nameOfAuthor: {$regex:name,$options:"i"} });
+  let publications = await publication.find({ nameOfAuthor:name });
+  // console.log(publications)
   let publicationsCount = publications.length;
   let tPub = [...publications];
   publications = await publication
-    .find()
+    .find({ nameOfAuthor:name })
     .limit(resultPerPage)
     .skip(skip);
   let tempP;
   let countArray = [];
   tempP = await publication.find({
-    nameOfAuthor: {$regex:name,$options:"i"} ,
+    nameOfAuthor:name ,
     typeOfPublication: {
       $regex: "journal",
       $options: "i",
@@ -35,7 +36,7 @@ exports.getPublicationsOfUser = asyncErrorHandler(async (req, res, next) => {
   });
   countArray.push(tempP.length);
   tempP = await publication.find({
-    nameOfAuthor: {$regex:name,$options:"i"} ,
+    nameOfAuthor:name ,
     typeOfPublication: {
       $regex: "book chapter",
       $options: "i",
@@ -43,7 +44,7 @@ exports.getPublicationsOfUser = asyncErrorHandler(async (req, res, next) => {
   });
   countArray.push(tempP.length);
   tempP = await publication.find({
-    nameOfAuthor: {$regex:name,$options:"i"} ,
+    nameOfAuthor:name ,
     typeOfPublication: {
       $regex: "conference",
       $options: "i",
@@ -51,7 +52,7 @@ exports.getPublicationsOfUser = asyncErrorHandler(async (req, res, next) => {
   });
   countArray.push(tempP.length);
   tempP = await publication.find({
-    nameOfAuthor: {$regex:name,$options:"i"} ,
+    nameOfAuthor:name ,
     typeOfPublication: {
       $regex: "patent",
       $options: "i",
@@ -59,7 +60,7 @@ exports.getPublicationsOfUser = asyncErrorHandler(async (req, res, next) => {
   });
   countArray.push(tempP.length);
   tempP = await publication.find({
-    nameOfAuthor: {$regex:name,$options:"i"} ,
+    nameOfAuthor:name ,
     typeOfPublication: {
       $regex: "copyright",
       $options: "i",
@@ -73,7 +74,7 @@ exports.getPublicationsOfUser = asyncErrorHandler(async (req, res, next) => {
   const yearCount = [];
   for (let i = 0; i < 15; i++) {
     const x = await publication.find({
-      nameOfAuthor: {$regex:name,$options:"i"} ,
+      nameOfAuthor:name ,
       year: currentYear - i,
     });
     let ob = {
@@ -86,7 +87,7 @@ exports.getPublicationsOfUser = asyncErrorHandler(async (req, res, next) => {
   const yearCitationsCount = [];
   for (let i = 0; i < 15; i++) {
     const x = await publication.find({
-      nameOfAuthor: {$regex:name,$options:"i"} ,
+      nameOfAuthor:name ,
       year: currentYear - i,
     });
     let c = 0;

@@ -31,14 +31,15 @@ import Modal from "@mui/material/Modal";
 import { MdOutlineClose } from "react-icons/md";
 import { RingLoader } from "react-spinners";
 import { scrapUserPublications } from "../../actions/userActions";
-
+import axios from "axios";
 ChartJs.register(ArcElement, Tooltip, Legend);
 const Account = () => {
+  
   const { user, loading } = useSelector((state) => state.user);
   const {
-    loading:loadingS,
+    loading: loadingS,
     success,
-    error:errorS,
+    error: errorS,
   } = useSelector((state) => state.scrapUserPubs);
   const chartSetting = {
     yAxis: [
@@ -299,19 +300,17 @@ const Account = () => {
             <div className="timelineBox">
               {user.education &&
                 user.education.map((item, index) => (
-                  <TimelineItem
-                    period={item.period}
-                    degree={item.degree}
-                    index={index}
-                    institute={item.institute}
-                  />
+                  <TimelineItem edu={item} index={index} />
                 ))}
             </div>
           </div>
           <div className="section-5">
             <h1>Publications</h1>
             <div className="pb-filter">
-              <div className="total-publications" style={{backgroundColor:"unset"}}>
+              <div
+                className="total-publications"
+                style={{ backgroundColor: "unset" }}
+              >
                 <b>Publications:</b>
                 {`(${10 * (currentPage - 1) + 1}-${
                   currentPage * 10
@@ -325,10 +324,15 @@ const Account = () => {
                 >
                   Download
                 </button>
-                <button className="upload-pub" onClick={()=>{
-                  console.log("hello")
-                  dispatch(scrapUserPublications())
-                }} >Fetch GS</button>
+                <button
+                  className="upload-pub"
+                  onClick={() => {
+                    console.log("hello");
+                    dispatch(scrapUserPublications());
+                  }}
+                >
+                  Fetch GS
+                </button>
                 <button
                   className="upload-pub"
                   onClick={handleOpen}
@@ -436,16 +440,14 @@ const Account = () => {
   );
 };
 
-const TimelineItem = ({ index, period, degree, institute }) => (
+const TimelineItem = ({ index, edu }) => (
   <div
     className={`timelineItem ${
       index % 2 === 0 ? "leftTimeline" : "rightTimeline"
     }`}
   >
     <div>
-      <h2>{period}</h2>
-      <p>{degree}</p>
-      <p>{institute}</p>
+      <p>{edu}</p>
     </div>
   </div>
 );
