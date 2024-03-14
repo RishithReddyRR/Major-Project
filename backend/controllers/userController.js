@@ -152,6 +152,7 @@ exports.getUserDetails = asyncErrorHandler(async (req, res, next) => {
 
 exports.getUserDetailsG = asyncErrorHandler(async (req, res, next) => {
   const u=await user.find({name:req.query.name})
+  
   res.status(200).json({
     success: true,
     user: u,

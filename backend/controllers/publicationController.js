@@ -9,11 +9,7 @@ const ApiFeatures = require("../utils/apiFeatures");
 exports.getPublicationsOfUser = asyncErrorHandler(async (req, res, next) => {
   const { name } = req.body;
   const resultPerPage = 10;
-  // console.log(req.body)
-  // const journals=await journal.find({nameOfAuthor:name})
-  // const conferences=await conference.find({nameOfAuthor:name})
-  // const bookChapters=await bookChapter.find({nameOfAuthor:name})
-  // console.log(journals)
+ 
   const currentPage = Number(req.query.page) || 1;
 
   const skip = resultPerPage * (currentPage - 1);

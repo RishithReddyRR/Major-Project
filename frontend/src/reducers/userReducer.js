@@ -78,7 +78,7 @@ export const usersReducer = createReducer(
 );
 
 export const userGReducer = createReducer(
-  { users: [] },
+  { user: [],success:false },
   {
     LOAD_USER_G_REQUEST: (state, action) => {
       state.loading = true;
@@ -86,7 +86,7 @@ export const userGReducer = createReducer(
     LOAD_USER_G_SUCCESS: (state, action) => {
       state.loading = false;
       state.success = true;
-      state.user = action.payload;
+      state.user = action.payload[0];
     },
     LOAD_USER_G_FAIL: (state, action) => {
       state.loading = false;
