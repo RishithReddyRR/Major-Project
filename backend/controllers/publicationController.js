@@ -17,18 +17,18 @@ exports.getPublicationsOfUser = asyncErrorHandler(async (req, res, next) => {
   const currentPage = Number(req.query.page) || 1;
 
   const skip = resultPerPage * (currentPage - 1);
-  let publications = await publication.find({ nameOfAuthor:name });
+  let publications = await publication.find({ nameOfAuthor: name });
   // console.log(publications)
   let publicationsCount = publications.length;
   let tPub = [...publications];
   publications = await publication
-    .find({ nameOfAuthor:name })
+    .find({ nameOfAuthor: name })
     .limit(resultPerPage)
     .skip(skip);
   let tempP;
   let countArray = [];
   tempP = await publication.find({
-    nameOfAuthor:name ,
+    nameOfAuthor: name,
     typeOfPublication: {
       $regex: "journal",
       $options: "i",
@@ -36,7 +36,7 @@ exports.getPublicationsOfUser = asyncErrorHandler(async (req, res, next) => {
   });
   countArray.push(tempP.length);
   tempP = await publication.find({
-    nameOfAuthor:name ,
+    nameOfAuthor: name,
     typeOfPublication: {
       $regex: "book chapter",
       $options: "i",
@@ -44,7 +44,7 @@ exports.getPublicationsOfUser = asyncErrorHandler(async (req, res, next) => {
   });
   countArray.push(tempP.length);
   tempP = await publication.find({
-    nameOfAuthor:name ,
+    nameOfAuthor: name,
     typeOfPublication: {
       $regex: "conference",
       $options: "i",
@@ -52,7 +52,7 @@ exports.getPublicationsOfUser = asyncErrorHandler(async (req, res, next) => {
   });
   countArray.push(tempP.length);
   tempP = await publication.find({
-    nameOfAuthor:name ,
+    nameOfAuthor: name,
     typeOfPublication: {
       $regex: "patent",
       $options: "i",
@@ -60,7 +60,7 @@ exports.getPublicationsOfUser = asyncErrorHandler(async (req, res, next) => {
   });
   countArray.push(tempP.length);
   tempP = await publication.find({
-    nameOfAuthor:name ,
+    nameOfAuthor: name,
     typeOfPublication: {
       $regex: "copyright",
       $options: "i",
@@ -74,7 +74,7 @@ exports.getPublicationsOfUser = asyncErrorHandler(async (req, res, next) => {
   const yearCount = [];
   for (let i = 0; i < 15; i++) {
     const x = await publication.find({
-      nameOfAuthor:name ,
+      nameOfAuthor: name,
       year: currentYear - i,
     });
     let ob = {
@@ -87,7 +87,7 @@ exports.getPublicationsOfUser = asyncErrorHandler(async (req, res, next) => {
   const yearCitationsCount = [];
   for (let i = 0; i < 15; i++) {
     const x = await publication.find({
-      nameOfAuthor:name ,
+      nameOfAuthor: name,
       year: currentYear - i,
     });
     let c = 0;
@@ -443,6 +443,7 @@ exports.deletePublication = asyncErrorHandler(async (req, res, next) => {
     // publicationDetails,
   });
 });
+
 //delete all publication @admin
 exports.deleteAllPublication = asyncErrorHandler(async (req, res, next) => {
   await publication.deleteMany();
@@ -469,11 +470,11 @@ exports.getPublications = asyncErrorHandler(async (req, res, next) => {
   const resultPerPage = Number(req.query.ppp);
   const publicationsCount = await publication.countDocuments();
   // console.log(req.body.keyword)
-  let arK=req.body.keyword.split(" ")
-  if(arK.length>16){
-    arK=arK.slice(0,17)
+  let arK = req.body.keyword.split(" ");
+  if (arK.length > 16) {
+    arK = arK.slice(0, 17);
   }
-  req.body.keyword=arK.join(" ")
+  req.body.keyword = arK.join(" ");
   // console.log(req.body.keyword)
   const months = [
     "JANUARY",
@@ -535,7 +536,7 @@ exports.getPublications = asyncErrorHandler(async (req, res, next) => {
     {
       $addFields: {
         score: { $meta: "searchScore" },
-        search:req.body.keyword==""?false:true
+        search: req.body.keyword == "" ? false : true,
       },
     },
   ];
@@ -547,7 +548,13 @@ exports.getPublications = asyncErrorHandler(async (req, res, next) => {
           // path: {
           //   wildcard: "*",
           // },
-          path:["abstract","title","keywords","listOfAuthors","typeOfPublication"],
+          path: [
+            "abstract",
+            "title",
+            "keywords",
+            "listOfAuthors",
+            "typeOfPublication",
+          ],
           fuzzy: {},
         },
       },
@@ -558,31 +565,24 @@ exports.getPublications = asyncErrorHandler(async (req, res, next) => {
   let pub = await publication.aggregate(agexp);
 
   let temp = [];
-
-  // pub.forEach((ele) => {
-  //   if (
-  //     !(
-  //       (ele.year == req.query.fYear &&
-  //         months.slice(0, monthMap.get(req.query.fMonth)).includes(ele.month)) ||
-  //       (ele.year == req.query.tYear &&
-  //         months.slice(monthMap.get(req.query.eMonth) + 1).includes(ele.month))
-  //     )
-  //   )
-  //     temp = [...temp, ele];
-  //   // console.log(`${ele.year}--${ele.month}`)
-  // });
-  // pub = [...temp];
+  for(let i=0;i<pub.length;i++){
+    if(req.query.department.includes(pub[i].department)){
+      temp=[...temp,pub[i]]
+    }
+  }
+  pub=[...temp]
+  temp=[]
   const currentPage = Number(req.query.page) || 1;
   let filteredPublicationsCount = pub.length;
 
   const skip = resultPerPage * (currentPage - 1);
-  pub.sort((a,b)=>b.noOfCitations-a.noOfCitations)
-  temp=pub
- 
-  temp.forEach(entry => {
+  pub.sort((a, b) => b.noOfCitations - a.noOfCitations);
+  temp = pub;
+
+  temp.forEach((entry) => {
     entry.keywords = entry.keywords.join(", "); // Convert array to comma-separated string
-    entry.listOfAuthors = entry.listOfAuthors.join(", "); 
-});
+    entry.listOfAuthors = entry.listOfAuthors.join(", ");
+  });
   pub = pub.slice(skip, skip + resultPerPage);
 
   res.status(200).json({

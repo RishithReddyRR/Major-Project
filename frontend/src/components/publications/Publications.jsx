@@ -20,14 +20,7 @@ import { utils, writeFile } from "xlsx";
 import { BsFilterLeft } from "react-icons/bs";
 import { FaWindowClose } from "react-icons/fa";
 
-const categories = [
-  "All",
-  "Journal",
-  "Book",
-  "Conference",
-  "Patent",
-  "Copyright",
-];
+const categories = ["Journal", "Book", "Conference", "Patent", "Copyright"];
 const Publications = () => {
   const { keyword } = useParams();
   const dispatch = useDispatch();
@@ -67,12 +60,33 @@ const Publications = () => {
     totalPublications,
   } = useSelector((state) => state.userPublications);
   const [currentPage, setCurrentPageNo] = useState(1);
-  const [category, setCategory] = useState("All");
+  const [selectedCategories, setSelectedCategories] = useState(categories);
+  const departments = ["IT", "CSE", "ECE", "EEE", "EIE"];
+
+  const [selectedDepartments, setSelectedDepartments] = useState(departments);
   const [fYear, setFYear] = useState("1970");
   const [tYear, setTYear] = useState("");
   const [fMonth, setFMonth] = useState("");
   const [eMonth, setEMonth] = useState("s");
   const [foc, setFoc] = useState(false);
+  const handleCheckboxChange = (category) => {
+    setSelectedCategories((prevSelected) => {
+      // Toggling the category's presence in the array
+      const newSelected = prevSelected.includes(category)
+        ? prevSelected.filter((cat) => cat !== category)
+        : [...prevSelected, category];
+      return newSelected;
+    });
+  };
+  const handleCheckboxChangeDep = (department) => {
+    setSelectedDepartments((prevSelected) => {
+      // Toggling the department's presence in the array
+      const newSelected = prevSelected.includes(department)
+        ? prevSelected.filter((dept) => dept !== department)
+        : [...prevSelected, department];
+      return newSelected;
+    });
+  };
   console.log(fYear);
   console.log(ppp);
   useEffect(() => {
@@ -93,7 +107,8 @@ const Publications = () => {
       getPublications(
         keyword,
         currentPage,
-        category,
+        selectedCategories,
+        selectedDepartments,
         value,
         setValue,
         ppp,
@@ -104,21 +119,8 @@ const Publications = () => {
         currentYear
       )
     );
-  }, [
-    dispatch,
-    error,
-    currentPage,
-    keyword,
-    category,
-    value,
-    Pppp,
-    fYear,
-    fMonth,
-    eMonth,
-    tYear,
-  ]);
+  }, [dispatch, error]);
   const downloadAsWorkbook = () => {
-   
     const ws = utils.json_to_sheet(totalPublications);
     /* create workbook and append worksheet */
     const wb = utils.book_new();
@@ -143,18 +145,33 @@ const Publications = () => {
           <FaWindowClose className="close" onClick={() => setFoc(!foc)} />
           <div className="categoryBox">
             <div className="categories">
-              {" "}
+              <BiSolidCategory />
+              Departments
+            </div>
+            {departments.map((department) => (
+              <div key={department} className="category">
+                <input
+                  type="checkbox"
+                  checked={selectedDepartments.includes(department)}
+                  onChange={() => handleCheckboxChangeDep(department)}
+                />
+                {department}
+              </div>
+            ))}
+            <div className="line"></div>
+
+            <div className="categories">
               <BiSolidCategory />
               Categories
             </div>
-            {categories.map((ele) => (
-              <div
-                className="category"
-                onClick={() => {
-                  setCategory(ele);
-                }}
-              >
-                {ele}
+            {categories.map((category) => (
+              <div className="category">
+                <input
+                  type="checkbox"
+                  checked={selectedCategories.includes(category)}
+                  onChange={() => handleCheckboxChange(category)}
+                />
+                {category}
               </div>
             ))}
           </div>
@@ -175,7 +192,7 @@ const Publications = () => {
             <div className="year">
               <div className=" year-filter" style={{ marginTop: "1vmax" }}>
                 {" "}
-                <div className="categories" style={{flexDirection:"row"}}>
+                <div className="categories" style={{ flexDirection: "row" }}>
                   {" "}
                   <MdCalendarMonth /> Date
                 </div>
@@ -201,34 +218,48 @@ const Publications = () => {
               </div>
             </div>
           </div>
+          <button
+            onClick={() => {
+              dispatch(
+                getPublications(
+                  keyword,
+                  currentPage,
+                  selectedCategories,
+                  selectedDepartments,
+                  value,
+                  setValue,
+                  ppp,
+                  fYear,
+                  tYear,
+                  fMonth,
+                  eMonth,
+                  currentYear
+                )
+              );
+            }}
+            className="apply"
+          >
+            Apply
+          </button>
         </div>
         <div className="publications">
           <p>Publications</p>
           <div className="b-filter">
-            <div className="total-publications" style={{backgroundColor:"unset"}}>
+            <div
+              className="total-publications"
+              style={{ backgroundColor: "unset" }}
+            >
               <BsFilterLeft
                 className="filter-side"
                 onClick={() => setFoc(!foc)}
               />
-              <b>{`${category == "All" ? "Publications" : category}:`}</b>
+              <b>{selectedCategories.join(",")}</b>
               {`(${Pppp * (currentPage - 1) + 1}-${
                 currentPage * Pppp
               } publications from total ${filteredPublicationsCount} publications)`}
             </div>
             <div style={{ marginRight: "1vmax" }}>
               <form className="ppp">
-                {/* <select
-                  id="publications-per-page"
-                  value={ppp}
-                  onChange={(event) => setPpp(event.target.value)}
-                >
-                  <option value={10}>Publications per page</option>
-                  <option value={10}>10</option>
-                  <option value={20}>20</option>
-                  <option value={30}>30</option>
-                  <option value={40}>40</option>
-                  <option value={50}>50</option>
-                </select> */}
                 <label htmlFor="">Publications per page</label>
                 <input
                   type="text"

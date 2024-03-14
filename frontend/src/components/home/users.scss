@@ -1,0 +1,25 @@
+.users{
+    div{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    width: 100vw;
+    text-align: center;
+  
+ 
+    >h2{
+        margin: unset;
+        padding:.7vmax 0;
+    }
+    }
+}
+.head{
+   background-color:  #20948B;
+    color: white;
+}
+.even{
+    background-color: #CEE6F2;
+}
+.user_link{
+    text-decoration: unset;
+    color: black;
+}

@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { userReducer } from "./reducers/userReducer";
-import { publicationAdminReducer, publicationDeleteReducer, publicationDetailsReducer, publicationReducer, publicationUploadReducer, publicationUserScrap } from "./reducers/publicationReducer";
+import { userGReducer, userReducer, usersReducer } from "./reducers/userReducer";
+import { publicationAdminReducer, publicationDeleteReducer, publicationDetailsReducer, publicationReducer, publicationsHome, publicationUploadReducer, publicationUserScrap } from "./reducers/publicationReducer";
 import { imageLoadReducer, imageReducer } from "./reducers/imageReducer";
 export const store=configureStore({
     reducer:{
@@ -12,6 +12,9 @@ export const store=configureStore({
         publicationsDelete:publicationDeleteReducer,
         images:imageReducer,
         imagesLoad:imageLoadReducer,
-        scrapUserPubs:publicationUserScrap
+        scrapUserPubs:publicationUserScrap,
+        homePublications:publicationsHome,
+        users:usersReducer,
+        userG:userGReducer
     }
 })

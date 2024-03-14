@@ -54,6 +54,20 @@ export const register = (userData) => async (dispatch) => {
       });
     }
   }
+  //load user
+
+  export const loadUserG=(name)=>async(dispatch)=>{
+    try {
+      dispatch({type:"LOAD_USER_G_REQUEST"});
+      const {data}=await axios.get(`/user/user_d?name=${name}`)
+      data.success?dispatch({type:"LOAD_USER_G_SUCCESS",payload:data.user}):dispatch({type:"LOAD_USER_G_FAIL",payload:data.message})
+    } catch (error) {
+      dispatch({
+        type: "LOAD_USER_G_FAIL",
+        payload: error.response.data.message,
+      });
+    }
+  }
 
   //logout user
 export const logout = () => async (dispatch) => {
@@ -64,6 +78,18 @@ export const logout = () => async (dispatch) => {
     dispatch({ type: "LOGOUT_SUCCESS" });
   } catch (error) {
     dispatch({ type: "LOGOUT_FAIL", payload: error.response.data.message });
+  }
+}
+  //users by Department
+export const usersByDepartment = (department) => async (dispatch) => {
+  department=department=="CSE(AI ML,IOT)"?"CSEAIML":department
+  department=department=="CSE(CYS,DS)"?"CSECYS":department
+  try {
+    dispatch({type:"USERS_REQUEST"})
+    const {data}=await axios.get(`/user/users_by_department?department=${department}`)
+    dispatch({ type: "USERS_SUCCESS",payload:data });
+  } catch (error) {
+    dispatch({ type: "USERS_FAIL", payload: error.response.data.message });
   }
 }
 //scrap user publications

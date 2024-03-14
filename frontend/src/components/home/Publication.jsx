@@ -1,11 +1,12 @@
 import React from "react";
+import "./publication.scss";
 import { Link } from "react-router-dom";
 const Publication = ({ pub, index }) => {
   let date=new Date(pub.dateOfPublication)
   return (
     <>
       <Link to={`/publication/${pub._id}`} className="link" target={"blank"}>
-        <div className="publication">
+        <div className="publication pubA">
           <div className="title">
             <a href={pub.url} target="blank">
               {`${index + 1})${pub.title.toUpperCase()}`}

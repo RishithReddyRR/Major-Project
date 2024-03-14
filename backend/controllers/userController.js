@@ -148,6 +148,15 @@ exports.getUserDetails = asyncErrorHandler(async (req, res, next) => {
     user: req.user,
   });
 });
+//get user details
+
+exports.getUserDetailsG = asyncErrorHandler(async (req, res, next) => {
+  const u=await user.find({name:req.query.name})
+  res.status(200).json({
+    success: true,
+    user: u,
+  });
+});
 
 //update password
 exports.updatePassword = asyncErrorHandler(async (req, res, next) => {
@@ -192,6 +201,16 @@ exports.updateProfile = asyncErrorHandler(async (req, res, next) => {
   res.status(200).json({
     success: true,
     user: u,
+  });
+});
+//get users by department
+exports.usersByDepartment = asyncErrorHandler(async (req, res, next) => {
+ 
+  let users=await user.find({department:{$regex:req.query.department,$options:"i"}})
+  res.status(200).json({
+    length:users.length,
+    success: true,
+    users
   });
 });
 

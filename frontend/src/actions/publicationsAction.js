@@ -68,6 +68,7 @@ export const getPublications =
     keyword,
     currentPage,
     category,
+    department,
     value,
     setValue,
     ppp,
@@ -94,7 +95,7 @@ export const getPublications =
           category == "All" ? "" : category
         }&citations[gte]=${value[0]}&citations[lte]=${
           value[1]
-        }&ppp=${ppp}&fYear=${fYear}&tYear=${tYear}&fMonth=${fMonth.toUpperCase()}&eMonth=${eMonth.toUpperCase()}`,
+        }&ppp=${ppp}&fYear=${fYear}&tYear=${tYear}&fMonth=${fMonth.toUpperCase()}&eMonth=${eMonth.toUpperCase()}&department=${department}`,
         {
           keyword
         }
@@ -129,15 +130,15 @@ export const getPublicationsHome = () => async (dispatch) => {
       },
     };
 
-    dispatch({ type: "PUBLICATION_REQUEST" });
+    dispatch({ type: "PUBLICATIONS_HOME_REQUEST" });
     const { data } = await axios.get(
       `/publication/publications-for-home`,
       config
     );
-    dispatch({ type: "PUBLICATION_SUCCESS", payload: data });
+    dispatch({ type: "PUBLICATIONS_HOME_SUCCESS", payload: data });
   } catch (error) {
     dispatch({
-      type: "PUBLICATION_FAIL",
+      type: "PUBLICATIONS_HOME_FAIL",
       payload: error.response.data.message,
     });
   }

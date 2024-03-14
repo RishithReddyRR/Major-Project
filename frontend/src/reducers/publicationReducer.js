@@ -155,3 +155,30 @@ export const publicationUserScrap = createReducer(
     },
   }
 );
+export const publicationsHome = createReducer(
+  { publications: [] },
+  {
+    PUBLICATIONS_HOME_REQUEST: (state, action) => {
+      state.loading = true;
+    },
+    PUBLICATIONS_HOME_SUCCESS: (state, action) => {
+      state.loading = false;
+      state.publications = action.payload.publications;
+      state.publicationsCount = action.payload.publicationsCount;
+      state.resultPerPage = action.payload.resultPerPage;
+      state.filteredPublicationsCount =
+        action.payload.filteredPublicationsCount;
+      state.totalPublications = action.payload.tPub;
+      state.countArray = action.payload.countArray;
+      state.yearCount = action.payload.yearCount;
+      state.yearCitationsCount = action.payload.yearCitationsCount;
+    },
+    PUBLICATIONS_HOME_FAIL: (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
+    CLEAR_ERRORS: (state, action) => {
+      state.error = null;
+    },
+  }
+);

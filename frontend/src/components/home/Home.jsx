@@ -1,19 +1,17 @@
 import React from "react";
-import MetaData from "./structure/MetaData";
+import MetaData from "../structure/MetaData";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
-import { FaArrowDown } from "react-icons/fa";
-import LandingImage from "../images/login-1.png";
-import vnrlogo from "../images/vnr-logo.png";
-import webOfScience from "../images/webOfScienceIcon.png";
 import ImageGallery from "react-image-gallery";
 import { useDispatch, useSelector } from "react-redux";
 import "./Home.scss";
 import { useEffect } from "react";
-import { getPublicationsCountHome, getPublicationsHome } from "../actions/publicationsAction";
-import Publication from "./publications/Publication";
+import {
+  getPublicationsCountHome,
+  getPublicationsHome,
+} from "../../actions/publicationsAction";
+import Publication from "./Publication";
 import { Link } from "react-router-dom";
-import { allImages } from "../actions/imageActions";
-import { getAdminPublications } from "../actions/publicationsAction";
+import { allImages } from "../../actions/imageActions";
 import { PieChart } from "@mui/x-charts/PieChart";
 import { BarChart } from "@mui/x-charts/BarChart";
 import { LineChart } from "@mui/x-charts/LineChart";
@@ -32,7 +30,7 @@ const Home = () => {
     height: hei,
   };
   const { images } = useSelector((state) => state.imagesLoad);
-
+  const departments=["CSE AND CSBS","IT","ECE","Civil Engineering","CSE(AI ML,IOT)","CSE(CYS,DS)","EIE","Automobile Engineering","Mechanical","EEE"]
   let imagesC = [];
   images.map((image) => {
     imagesC = [
@@ -43,7 +41,7 @@ const Home = () => {
     ];
   });
   const { publications, error, loading } = useSelector(
-    (state) => state.userPublications
+    (state) => state.homePublications
   );
   const {
     publicationsCount,
@@ -63,14 +61,6 @@ const Home = () => {
     <div>
       <MetaData title={`Home`} />
       <div className="landing-parent">
-        {/* <img src={LandingImage} className="landing" />
-        <q>
-          Publishing is the art of working on a creative idea and turning it
-          into a masterpiece.
-        </q>
-        <a href="#carousel">
-          <FaArrowDown className="scroll-down" />
-        </a> */}
         {loadingD ? (
           <div id="loader">
             <SkewLoader color="#36d7b7" size={"6vmax"} />
@@ -221,6 +211,14 @@ const Home = () => {
             </div>
           </div>
         )}
+      </div>
+      <div className="nav">
+        <h2>Users By Department</h2>
+        <div>
+          {
+            departments.map((department,idx)=><Link className="dep" id={idx} to={`/users/${department}`} target="_blank" >{department}</Link>)
+          }
+        </div>
       </div>
       <div id="carousel">
         <ImageGallery

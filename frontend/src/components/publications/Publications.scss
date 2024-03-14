@@ -8,7 +8,14 @@
 .publications > .line {
   margin-top: 0.3vmax;
 }
-
+.apply {
+  padding: 0.5vmax 5vmax;
+  border-radius: 0.3vmax;
+  color: white;
+  background-color: #1e81b0;
+  border: none;
+  margin-top: 3vmax;
+}
 .publications > p {
   color: green;
   font-size: 2vmax;
@@ -127,7 +134,7 @@
   overflow-y: scroll;
   overflow-x: hidden;
   z-index: -1;
-  &::-webkit-scrollbar{
+  &::-webkit-scrollbar {
     display: none;
   }
 }
@@ -218,9 +225,11 @@ body::-webkit-scrollbar {
   justify-content: space-between;
   align-items: center;
   min-height: 5vmax;
-  >div{
+  > div {
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
   }
 }
 .date-filter {
@@ -274,7 +283,6 @@ body::-webkit-scrollbar {
     text-align: center;
     display: none;
     transition: all 0.5s ease-in-out !important;
-
   }
 }
 .download-excel:hover {
@@ -297,12 +305,13 @@ total-publications {
 }
 .close {
   position: absolute;
-  top:4vmax;
+  top: 4vmax;
   right: 1vmax;
   display: none;
   // align-self: flex-end;
 }
-.close,.filter-side{
+.close,
+.filter-side {
   cursor: pointer;
 }
 
@@ -327,7 +336,7 @@ total-publications {
     flex-direction: column;
   }
   .filterBox {
-    transition: all .7s ease-in-out;
+    transition: all 0.7s ease-in-out;
   }
   .f-b-close {
     width: 30%;
@@ -358,36 +367,48 @@ total-publications {
     top: 1vmax;
     left: 1vmax;
   }
+  .category {
+    margin-left: 40vmax;
+    position: relative;
+    right: 9%;
+  }
   .cRange {
     width: 17vw;
   }
-  .filterBox .line{
-    position:relative;
-    left:-10vmax;
+  .filterBox .line {
+    position: relative;
+    left: -10vmax;
   }
-  .fty{
-    width:23vmax;
-    
+  .fty {
+    width: 23vmax;
   }
-  .from,.to{
-    width:10vmax;
+  .from,
+  .to {
+    width: 10vmax;
   }
-.close{
-  display: unset;
-}
-  
+  .close {
+    display: unset;
+  }
 }
 
-
-@media screen and (max-width: 440px){
+@media screen and (max-width: 440px) {
   .f-b-close {
     width: 50%;
-  
+
     left: -50%;
   }
   .f-b-open {
     width: 50%;
-   
+
     left: 0%;
-      }
-} 
+  }
+  .category {
+    right: 40% !important;
+  }
+}
+
+@media screen and (max-width: 530px) {
+  .category {
+    right: 20%;
+  }
+}

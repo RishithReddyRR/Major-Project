@@ -1,6 +1,6 @@
 import './App.css';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Home from "./components/Home.jsx"
+import Home from "./components/home/Home.jsx"
 import Login from "./components/user/Login.jsx"
 import Nav from "./components/structure/Nav.jsx"
 import Register from "./components/user/Register.jsx"
@@ -20,6 +20,8 @@ import Bookmarks from './components/publications/Bookmarks.jsx';
 import UpdatePublication from './components/admin/UpdatePublication';
 import UploadPublication from './components/admin/UploadPublication.jsx';
 import UserPanel from './components/admin/UserPanel.jsx';
+import Users from './components/home/Users';
+import User from './components/home/User';
 function App() {
   const dispatch=useDispatch()
   const {isAuthenticated}=useSelector(state=>state.user)
@@ -38,8 +40,10 @@ function App() {
         <Route path='/search' element={<Search/>}/>
         <Route path='/analytics' element={<Analytics/>}/>
         <Route path='/publications/:keyword' element={<Publications/>}/>
+        <Route path='/users/:department' element={<Users/>}/>
         <Route path='/publications' element={<Publications/>}/>
         <Route path='/publication/:id' element={<PublicationDetails/>}/>
+        <Route path='/user/:name' element={<User/>}/>
         <Route
           path="/account"
           element={
