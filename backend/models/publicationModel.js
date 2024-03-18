@@ -19,6 +19,7 @@ const publicationSchema = new mongoose.Schema({
   },
   title: {
     type: String,
+    unique:true
   },
   typeOfPublication: {
     type: String,

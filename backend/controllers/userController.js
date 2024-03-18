@@ -426,12 +426,14 @@ exports.scrapAllPublications = asyncErrorHandler(async (req, res) => {
       let d = resp.data;
       let x = cheerio.load(d);
       publication.nameOfAuthor = users[j].name;
+      publication.noOfCitations=0
       let e = x(".gsc_oci_title_link");
-      if (x(e[0]).attr("href") != "") {
+      if (!(x(e[0]).attr("href") === undefined)) {
         publication.url = x(e[0]).attr("href");
       } else {
         publication.url = `https://scholar.google.co.in/${url}`;
       }
+      e = x("#gsc_oci_title");
       publication.title = x(e[0]).text();
       e = x(".gs_scl");
       e.each((idx, ele) => {
@@ -505,7 +507,7 @@ exports.scrapAllPublications = asyncErrorHandler(async (req, res) => {
       publications = [...publications, publication];
 
       console.log(publication);
-      await wait(60000)
+      await wait(30000)
     }
   }
   publication.deleteMany({ nameOfAuthor: req.user.name });

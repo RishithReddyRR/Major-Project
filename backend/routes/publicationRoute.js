@@ -1,5 +1,5 @@
 const express=require("express")
-const { getPublicationsOfUser, getPublications, getPublicationDetails, getPublicationHome, getPublicationsAdmin, getAdminPublications, deletePublication, updatePublication, deleteAllPublication, getPublicationsHome, update } = require("../controllers/publicationController")
+const { getPublicationsOfUser, getPublications, getPublicationDetails, getPublicationHome, getPublicationsAdmin, getAdminPublications, deletePublication, updatePublication, deleteAllPublication, getPublicationsHome, update, getIt,  } = require("../controllers/publicationController")
 const { isAuthenticatedUser } = require("../middleware/auth")
 const router=express.Router()
 

@@ -4,12 +4,14 @@ const { asyncErrorHandler } = require("../middleware/catchAsyncError");
 // const bookChapter = require("../models/bookChapterModel");
 const publication = require("../models/publicationModel");
 const ApiFeatures = require("../utils/apiFeatures");
+const { utils, writeFile } = require("xlsx");
+
 //user publication details
 
 exports.getPublicationsOfUser = asyncErrorHandler(async (req, res, next) => {
   const { name } = req.body;
   const resultPerPage = 10;
- 
+
   const currentPage = Number(req.query.page) || 1;
 
   const skip = resultPerPage * (currentPage - 1);
@@ -136,6 +138,35 @@ exports.getPublicationsOfUser = asyncErrorHandler(async (req, res, next) => {
 //get publications for home page
 exports.getPublicationHome = asyncErrorHandler(async (req, res, next) => {
   const publications = await publication.find({}).limit(8);
+  let pubs = await publication.find({});
+  const map1 = new Map();
+  for (let i = 0; i < pubs.length; i++) {
+    if (map1.has(pubs[i].year)) {
+      map1.set(
+        pubs[i].year,
+        map1.get(pubs[i].year) + Number(pubs[i].noOfCitations)
+      );
+    } else {
+      map1.set(pubs[i].year, Number(pubs[i].noOfCitations));
+    }
+  }
+  const sortedMap = new Map(
+    Array.from(map1.entries()).sort((a, b) => a[0] - b[0])
+  );
+  console.log(map1);
+  console.log(sortedMap);
+  const arrayOfObjects = Array.from(sortedMap).map(([year, citations]) => ({
+    year:`${year}-01-01`,
+    citations,
+  }));
+
+  console.log(arrayOfObjects);
+  const ws = utils.json_to_sheet(arrayOfObjects);
+  /* create workbook and append worksheet */
+  const wb = utils.book_new();
+  utils.book_append_sheet(wb, ws, "publications");
+  /* export to XLSX */
+  writeFile(wb, "IT.xlsx");
   res.status(200).json({
     success: true,
     publications,
@@ -561,13 +592,13 @@ exports.getPublications = asyncErrorHandler(async (req, res, next) => {
   let pub = await publication.aggregate(agexp);
 
   let temp = [];
-  for(let i=0;i<pub.length;i++){
-    if(req.query.department.includes(pub[i].department)){
-      temp=[...temp,pub[i]]
+  for (let i = 0; i < pub.length; i++) {
+    if (req.query.department.includes(pub[i].department)) {
+      temp = [...temp, pub[i]];
     }
   }
-  pub=[...temp]
-  temp=[]
+  pub = [...temp];
+  temp = [];
   const currentPage = Number(req.query.page) || 1;
   let filteredPublicationsCount = pub.length;
 
@@ -588,5 +619,26 @@ exports.getPublications = asyncErrorHandler(async (req, res, next) => {
     resultPerPage,
     filteredPublicationsCount,
     tPub: temp,
+  });
+});
+
+//get NOC of it year wise
+exports.getItData = asyncErrorHandler(async (req, res, next) => {
+  console.lo;
+  let pubs = await publication.find({});
+  const map1 = new Map();
+  for (let i = 0; i < pubs.length; i++) {
+    if (map1.has(pubs[0].year)) {
+      map1.set(
+        pubs[i].year,
+        map1.get(pubs[i].year) + Number(pubs[i].noOfCitations)
+      );
+    } else {
+      map1.set(pubs[i].year, Number(pubs[i].noOfCitations));
+    }
+  }
+  console.log(map1);
+  res.status(200).json({
+    success: true,
   });
 });
