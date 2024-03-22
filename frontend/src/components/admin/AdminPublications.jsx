@@ -26,14 +26,7 @@ import { BsFilterLeft } from "react-icons/bs";
 import { LuSearch } from "react-icons/lu";
 import { useNavigate } from "react-router-dom";
 
-const categories = [
-  "All",
-  "Journal",
-  "Book Chapter",
-  "Conference",
-  "Patent",
-  "Copyright",
-];
+const categories = ["Journal", "Book", "Conference", "Patent", "Copyright"];
 const AdminPublications = () => {
   const { deleted, success, error } = useSelector(
     (state) => state.publicationsDelete
@@ -84,6 +77,28 @@ const AdminPublications = () => {
   const [eMonth, setEMonth] = useState("s");
   const [foc, setFoc] = useState(false);
   const [key, setKey] = useState("");
+  const [selectedCategories, setSelectedCategories] = useState(categories);
+  const departments = ["IT", "CSE", "ECE", "EEE", "EIE"];
+
+  const [selectedDepartments, setSelectedDepartments] = useState(departments);
+  const handleCheckboxChange = (category) => {
+    setSelectedCategories((prevSelected) => {
+      // Toggling the category's presence in the array
+      const newSelected = prevSelected.includes(category)
+        ? prevSelected.filter((cat) => cat !== category)
+        : [...prevSelected, category];
+      return newSelected;
+    });
+  };
+  const handleCheckboxChangeDep = (department) => {
+    setSelectedDepartments((prevSelected) => {
+      // Toggling the department's presence in the array
+      const newSelected = prevSelected.includes(department)
+        ? prevSelected.filter((dept) => dept !== department)
+        : [...prevSelected, department];
+      return newSelected;
+    });
+  };
   // console.log(fYear);
   // console.log(ppp);
   useEffect(() => {
@@ -118,7 +133,8 @@ const AdminPublications = () => {
       getPublications(
         keyword,
         currentPage,
-        category,
+        selectedCategories,
+        selectedDepartments,
         value,
         setValue,
         ppp,
@@ -129,19 +145,10 @@ const AdminPublications = () => {
         currentYear
       )
     );
-    setFoc(false)
+    setFoc(false);
   }, [
     dispatch,
     error,
-    currentPage,
-    keyword,
-    category,
-    value,
-    Pppp,
-    fYear,
-    fMonth,
-    eMonth,
-    tYear,
     success,
     deleted,
   ]);
@@ -188,18 +195,33 @@ const AdminPublications = () => {
               <FaWindowClose className="close-a" onClick={() => setFoc(!foc)} />
               <div className="categoryBox">
                 <div className="categories">
-                  {" "}
+                  <BiSolidCategory />
+                  Departments
+                </div>
+                {departments.map((department) => (
+                  <div key={department} className="category">
+                    <input
+                      type="checkbox"
+                      checked={selectedDepartments.includes(department)}
+                      onChange={() => handleCheckboxChangeDep(department)}
+                    />
+                    {department}
+                  </div>
+                ))}
+                <div className="line"></div>
+
+                <div className="categories">
                   <BiSolidCategory />
                   Categories
                 </div>
-                {categories.map((ele) => (
-                  <div
-                    className="category"
-                    onClick={() => {
-                      setCategory(ele);
-                    }}
-                  >
-                    {ele}
+                {categories.map((category) => (
+                  <div className="category">
+                    <input
+                      type="checkbox"
+                      checked={selectedCategories.includes(category)}
+                      onChange={() => handleCheckboxChange(category)}
+                    />
+                    {category}
                   </div>
                 ))}
               </div>
@@ -220,7 +242,10 @@ const AdminPublications = () => {
                 <div className="year">
                   <div className=" year-filter" style={{ marginTop: "1vmax" }}>
                     {" "}
-                    <div className="categories">
+                    <div
+                      className="categories"
+                      style={{ flexDirection: "row" }}
+                    >
                       {" "}
                       <MdCalendarMonth /> Date
                     </div>
@@ -246,6 +271,30 @@ const AdminPublications = () => {
                   </div>
                 </div>
               </div>
+              <button
+                onClick={() => {
+                  setFoc(false)
+                  dispatch(
+                    getPublications(
+                      keyword,
+                      currentPage,
+                      selectedCategories,
+                      selectedDepartments,
+                      value,
+                      setValue,
+                      ppp,
+                      fYear,
+                      tYear,
+                      fMonth,
+                      eMonth,
+                      currentYear
+                    )
+                  );
+                }}
+                className="apply"
+              >
+                Apply
+              </button>
             </div>
             <p>Publications</p>
             <div className="b-filter">
@@ -257,7 +306,6 @@ const AdminPublications = () => {
               </div>
               <div style={{ marginRight: "1vmax" }}>
                 <form className="ppp">
-                
                   <label htmlFor="">Publications per page</label>
                   <input
                     type="text"

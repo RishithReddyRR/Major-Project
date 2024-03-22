@@ -15,12 +15,12 @@ const Table = ({data}) => {
          {
             data.map(ele=><div>
                 <p>{`${ele.periodS}-${ele.periodS+1}`}</p>
-                <p>{ele.publications}</p>
-                <p>{ele.journals}</p>
-                <p>{ele.conferences}</p>
-                <p>{ele.books}</p>
-                <p>{ele.patents}</p>
-                <p>{ele.copyrights}</p>
+                <p>{JSON.stringify(ele.publications)}</p>
+                <p>{JSON.stringify(ele.journals)}</p>
+                <p>{JSON.stringify(ele.conferences)}</p>
+                <p>{JSON.stringify(ele.books)}</p>
+                <p>{JSON.stringify(ele.patents)}</p>
+                <p>{JSON.stringify(ele.copyrights)}</p>
             </div>)
          }
     </div>

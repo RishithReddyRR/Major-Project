@@ -5,6 +5,7 @@ const { asyncErrorHandler } = require("../middleware/catchAsyncError");
 const publication = require("../models/publicationModel");
 const ApiFeatures = require("../utils/apiFeatures");
 const { utils, writeFile } = require("xlsx");
+const axios = require("axios");
 
 //user publication details
 
@@ -635,7 +636,7 @@ exports.getItData = asyncErrorHandler(async (req, res, next) => {
       map1.set(pubs[i].year, Number(pubs[i].noOfCitations));
     }
   }
-  console.log(map1);
+  // console.log(map1);
   res.status(200).json({
     success: true,
   });
@@ -650,7 +651,7 @@ exports.getPeriodAnalytics = asyncErrorHandler(async (req, res, next) => {
   let departments = req.body.departments;
   // let departments = ["IT"];
   let pubs;
-  let temp=[]
+  let temp = [];
   for (let i = 0; i < span; i++) {
     let ob = {};
     ob.periodS = year - i - 1;
@@ -754,115 +755,127 @@ exports.getPeriodAnalytics = asyncErrorHandler(async (req, res, next) => {
     ob.copyrights = pubs.length;
     temp = [...temp, ob];
   }
+  let {data} = await axios.get("http://127.0.0.1:5000/predict");
+  let {predictions}=data
+  console.log(predictions)
+  let ob={}
+  ob.publications=predictions[5]
+  ob.journals=predictions[0]
+  ob.conferences=predictions[1]
+  ob.books=predictions[2]
+  ob.patents=predictions[3]
+  ob.copyrights=predictions[4]
+  ob.periodS=2025
+  temp=[ob,...temp]
   analytics = [{ department: departments, data: temp }];
-for(let j=0;j<departments.length;j++){
-  temp=[]
-  for (let i = 0; i < span; i++) {
-    let ob = {};
-    ob.periodS = year - i - 1;
-    ob.periodE = year - i;
-    let yearInSecE = Number(new Date(`${ob.periodE}-01-01`).getTime());
-    let yearInSecS = Number(new Date(`${ob.periodS}-01-01`).getTime());
-    pubs = await publication.find({
-      $and: [
-        {
-          dateOfPublication: { $gte: yearInSecS, $lte: yearInSecE },
-        },
-        {
-          department: departments[j],
-        },
-      ],
-    });
-    ob.publications = pubs.length;
-    pubs = await publication.find({
-      $and: [
-        {
-          dateOfPublication: { $gte: yearInSecS, $lte: yearInSecE },
-        },
-        {
-          typeOfPublication: {
-            $regex: "journal",
-            $options: "i",
+  for (let j = 0; j < departments.length; j++) {
+    temp = [];
+    for (let i = 0; i < span; i++) {
+      let ob = {};
+      ob.periodS = year - i - 1;
+      ob.periodE = year - i;
+      let yearInSecE = Number(new Date(`${ob.periodE}-01-01`).getTime());
+      let yearInSecS = Number(new Date(`${ob.periodS}-01-01`).getTime());
+      pubs = await publication.find({
+        $and: [
+          {
+            dateOfPublication: { $gte: yearInSecS, $lte: yearInSecE },
           },
-        },
-        {
-          department: departments[j],
-        },
-      ],
-    });
-    ob.journals = pubs.length;
-    pubs = await publication.find({
-      $and: [
-        {
-          dateOfPublication: { $gte: yearInSecS, $lte: yearInSecE },
-        },
-        {
-          typeOfPublication: {
-            $regex: "book",
-            $options: "i",
+          {
+            department: departments[j],
           },
-        },
-        {
-          department: departments[j],
-        },
-      ],
-    });
-    ob.books = pubs.length;
-    pubs = await publication.find({
-      $and: [
-        {
-          dateOfPublication: { $gte: yearInSecS, $lte: yearInSecE },
-        },
-        {
-          typeOfPublication: {
-            $regex: "conference",
-            $options: "i",
+        ],
+      });
+      ob.publications = pubs.length;
+      pubs = await publication.find({
+        $and: [
+          {
+            dateOfPublication: { $gte: yearInSecS, $lte: yearInSecE },
           },
-        },
-        {
-          department: departments[j],
-        },
-      ],
-    });
-    ob.conferences = pubs.length;
-    pubs = await publication.find({
-      $and: [
-        {
-          dateOfPublication: { $gte: yearInSecS, $lte: yearInSecE },
-        },
-        {
-          typeOfPublication: {
-            $regex: "patent",
-            $options: "i",
+          {
+            typeOfPublication: {
+              $regex: "journal",
+              $options: "i",
+            },
           },
-        },
-        {
-          department: departments[j],
-        },
-      ],
-    });
-    ob.patents = pubs.length;
-    pubs = await publication.find({
-      $and: [
-        {
-          dateOfPublication: { $gte: yearInSecS, $lte: yearInSecE },
-        },
-        {
-          typeOfPublication: {
-            $regex: "copy",
-            $options: "i",
+          {
+            department: departments[j],
           },
-        },
-        {
-          department: departments[j],
-        },
-      ],
-    });
-    ob.copyrights = pubs.length;
-    temp = [...temp, ob];
+        ],
+      });
+      ob.journals = pubs.length;
+      pubs = await publication.find({
+        $and: [
+          {
+            dateOfPublication: { $gte: yearInSecS, $lte: yearInSecE },
+          },
+          {
+            typeOfPublication: {
+              $regex: "book",
+              $options: "i",
+            },
+          },
+          {
+            department: departments[j],
+          },
+        ],
+      });
+      ob.books = pubs.length;
+      pubs = await publication.find({
+        $and: [
+          {
+            dateOfPublication: { $gte: yearInSecS, $lte: yearInSecE },
+          },
+          {
+            typeOfPublication: {
+              $regex: "conference",
+              $options: "i",
+            },
+          },
+          {
+            department: departments[j],
+          },
+        ],
+      });
+      ob.conferences = pubs.length;
+      pubs = await publication.find({
+        $and: [
+          {
+            dateOfPublication: { $gte: yearInSecS, $lte: yearInSecE },
+          },
+          {
+            typeOfPublication: {
+              $regex: "patent",
+              $options: "i",
+            },
+          },
+          {
+            department: departments[j],
+          },
+        ],
+      });
+      ob.patents = pubs.length;
+      pubs = await publication.find({
+        $and: [
+          {
+            dateOfPublication: { $gte: yearInSecS, $lte: yearInSecE },
+          },
+          {
+            typeOfPublication: {
+              $regex: "copy",
+              $options: "i",
+            },
+          },
+          {
+            department: departments[j],
+          },
+        ],
+      });
+      ob.copyrights = pubs.length;
+      temp = [...temp, ob];
+    }
+    analytics = [...analytics, { department: departments[j], data: temp }];
   }
-analytics=[...analytics,{department:departments[j],data:temp}]
-}
   res.status(200).json({
     success: true,
     analytics,
