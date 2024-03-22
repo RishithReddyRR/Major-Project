@@ -182,3 +182,23 @@ export const publicationsHome = createReducer(
     },
   }
 );
+export const analyticsReducer = createReducer(
+  { analytics: [] },
+  {
+    ANALYTICS_REQUEST: (state, action) => {
+      state.loading = true;
+    },
+    ANALYTICS_SUCCESS: (state, action) => {
+      state.loading = false;
+      state.analytics = action.payload.analytics;
+      
+    },
+    ANALYTICS_FAIL: (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
+    CLEAR_ERRORS: (state, action) => {
+      state.error = null;
+    },
+  }
+);

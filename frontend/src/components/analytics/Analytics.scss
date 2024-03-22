@@ -1,0 +1,38 @@
+.analytics-display {
+    margin: 0vmax .2vmax 4vmax .2vmax;
+    border: solid .1vmax rgba(0,0,0,.3);
+  > p {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    padding: 1vmax 0;
+    font-size: 2vmax;
+  }
+}
+.analytics{
+    margin-top: 0;
+    background-color: #FCF6F5FF;
+    position: relative;
+}
+.filter-analytics{
+    position: fixed;
+    font-size: 5vmax;
+    cursor: pointer;
+  
+}
+.filter-an{
+    background-color: white;
+    z-index: 19 !important;
+    min-height:100vmin !important;
+    overflow-y: unset !important;
+    position: fixed;
+    left: 0;
+    top:4vmax !important;
+    background-color: white !important;
+    transition: all .1s linear;
+}
+.span{
+  padding:.6vmax 3vmax;
+  border-radius: 3vmax;
+}

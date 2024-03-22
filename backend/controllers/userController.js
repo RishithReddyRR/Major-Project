@@ -151,8 +151,8 @@ exports.getUserDetails = asyncErrorHandler(async (req, res, next) => {
 //get user details
 
 exports.getUserDetailsG = asyncErrorHandler(async (req, res, next) => {
-  const u=await user.find({name:req.query.name})
-  
+  const u = await user.find({ name: req.query.name });
+
   res.status(200).json({
     success: true,
     user: u,
@@ -206,12 +206,13 @@ exports.updateProfile = asyncErrorHandler(async (req, res, next) => {
 });
 //get users by department
 exports.usersByDepartment = asyncErrorHandler(async (req, res, next) => {
- 
-  let users=await user.find({department:{$regex:req.query.department,$options:"i"}})
+  let users = await user.find({
+    department: { $regex: req.query.department, $options: "i" },
+  });
   res.status(200).json({
-    length:users.length,
+    length: users.length,
     success: true,
-    users
+    users,
   });
 });
 
@@ -230,7 +231,8 @@ exports.scrapDetails = asyncErrorHandler(async (req, res) => {
   const wait = (n) => new Promise((resolve) => setTimeout(resolve, n));
   let gsUrl = req.user.gsProfile;
   // scrap google scholar
-  let response = await axios.get(`${gsUrl}&cstart=0&pagesize=1000`, {
+  console.log(`${gsUrl.trim()}&cstart=0&pagesize=1000`)
+  let response = await axios.get(`${gsUrl.trim()}&cstart=0&pagesize=1000`, {
     headers: {
       "User-Agent":
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36",
@@ -242,7 +244,6 @@ exports.scrapDetails = asyncErrorHandler(async (req, res) => {
   //       "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36",
   //   },
   // });
-
   let data = response.data;
   let $ = cheerio.load(data);
 
@@ -357,10 +358,12 @@ exports.scrapDetails = asyncErrorHandler(async (req, res) => {
     publication.keywords = keywords.data.keywords;
     publications = [...publications, publication];
 
-    // console.log(publication);
+    console.log(publication);
+    await wait(60000);
+
   }
-  publication.deleteMany({ nameOfAuthor: req.user.name });
-  publication.insertMany(publications);
+  // publication.deleteMany({ nameOfAuthor: req.user.name });
+  // publication.insertMany(publications);
 
   res.json({
     success: true,
@@ -426,7 +429,8 @@ exports.scrapAllPublications = asyncErrorHandler(async (req, res) => {
       let d = resp.data;
       let x = cheerio.load(d);
       publication.nameOfAuthor = users[j].name;
-      publication.noOfCitations=0
+      publication.noOfCitations = 0;
+      publication.typeOfPublication = "Journal";
       let e = x(".gsc_oci_title_link");
       if (!(x(e[0]).attr("href") === undefined)) {
         publication.url = x(e[0]).attr("href");
@@ -507,7 +511,7 @@ exports.scrapAllPublications = asyncErrorHandler(async (req, res) => {
       publications = [...publications, publication];
 
       console.log(publication);
-      await wait(30000)
+      await wait(60000);
     }
   }
   publication.deleteMany({ nameOfAuthor: req.user.name });

@@ -2,6 +2,7 @@ const express=require('express');
 const { uploadUsers } = require('../controllers/fileUploadController');
 const { createUser,userLogin, logout, forgotPassword, resetPassword, getUserDetails, updatePassword, updateProfile, temp, scrapDetails, updatePasswords, scrapAllPublications, usersByDepartment, getUserDetailsG } = require('../controllers/userController');
 const { isAuthenticatedUser } = require('../middleware/auth');
+var cors = require('cors')
 
 //route for creaing user
 const router=express.Router()
@@ -16,7 +17,7 @@ router.route('/update_password').put(isAuthenticatedUser,updatePassword)
 router.route('/update_passwords').put(updatePasswords)
 router.route('/update_profile').put(isAuthenticatedUser,updateProfile)
 router.route('/update').put(temp)
-router.route('/scrap_user_pubs').put(isAuthenticatedUser,scrapDetails)
+router.route('/scrap_user_pubs').put(cors(),isAuthenticatedUser,scrapDetails)
 router.route('/scrap_all_pubs').put(scrapAllPublications)
 router.route('/users_by_department').get(usersByDepartment)
 

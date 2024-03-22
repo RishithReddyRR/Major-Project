@@ -1,4 +1,5 @@
 //get publication details
+import { utils, writeFile } from "xlsx";
 
 import axios from "axios";
 
@@ -53,7 +54,10 @@ export const getPublicationsCountHome = () => async (dispatch) => {
     };
 
     dispatch({ type: "PUBLICATION_ADMIN_REQUEST" });
-    const { data } = await axios.get(`/publication/publicationsCount-for-home`, config);
+    const { data } = await axios.get(
+      `/publication/publicationsCount-for-home`,
+      config
+    );
     dispatch({ type: "PUBLICATION_ADMIN_SUCCESS", payload: data });
   } catch (error) {
     dispatch({
@@ -97,14 +101,14 @@ export const getPublications =
           value[1]
         }&ppp=${ppp}&fYear=${fYear}&tYear=${tYear}&fMonth=${fMonth.toUpperCase()}&eMonth=${eMonth.toUpperCase()}&department=${department}`,
         {
-          keyword
+          keyword,
         }
       );
       dispatch({ type: "PUBLICATION_SUCCESS", payload: data });
     } catch (error) {
       dispatch({
         type: "PUBLICATION_FAIL",
-        payload: error.response.data.message,
+        payload: error.response,
       });
     }
   };
@@ -217,8 +221,30 @@ export const updatePublications = (id, ob) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: "PUBLICATION_DETAILS_FAIL",
-      // payload: error.response.data.message,
-      payload: error,
+      payload: error.response.data.message,
+      // payload: error,
+    });
+  }
+};
+//analytics of publications
+
+export const analyticsP = (span, departments) => async (dispatch) => {
+  try {
+    dispatch({ type: "ANALYTICS_REQUEST" });
+
+    const { data } = await axios.post(
+      `/publication/publications_analytics?span=${span}`,
+      { departments }
+    );
+
+    dispatch({
+      type: "ANALYTICS_SUCCESS",
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: "ANALYTICS_FAIL",
+      payload: error.response.data.message,
     });
   }
 };

@@ -257,18 +257,7 @@ const AdminPublications = () => {
               </div>
               <div style={{ marginRight: "1vmax" }}>
                 <form className="ppp">
-                  {/* <select
-                    id="publications-per-page"
-                    value={ppp}
-                    onChange={(event) => setPpp(event.target.value)}
-                  >
-                    <option value={10}>Publications per page</option>
-                    <option value={10}>10</option>
-                    <option value={20}>20</option>
-                    <option value={30}>30</option>
-                    <option value={40}>40</option>
-                    <option value={50}>50</option>
-                  </select> */}
+                
                   <label htmlFor="">Publications per page</label>
                   <input
                     type="text"
