@@ -206,8 +206,24 @@ exports.updateProfile = asyncErrorHandler(async (req, res, next) => {
 });
 //get users by department
 exports.usersByDepartment = asyncErrorHandler(async (req, res, next) => {
+  // let users = await user.find({
+  //   department: { $regex: req.query.department, $options: "i" },
+  // });
   let users = await user.find({
-    department: { $regex: req.query.department, $options: "i" },
+    department: req.query.department,
+  });
+  res.status(200).json({
+    length: users.length,
+    success: true,
+    users,
+  });
+});
+//get users by department
+exports.getAllUsers = asyncErrorHandler(async (req, res, next) => {
+  // let users = await user.find({
+  //   department: { $regex: req.query.department, $options: "i" },
+  // });
+  let users = await user.find({
   });
   res.status(200).json({
     length: users.length,
@@ -231,7 +247,7 @@ exports.scrapDetails = asyncErrorHandler(async (req, res) => {
   const wait = (n) => new Promise((resolve) => setTimeout(resolve, n));
   let gsUrl = req.user.gsProfile;
   // scrap google scholar
-  console.log(`${gsUrl.trim()}&cstart=0&pagesize=1000`)
+  console.log(`${gsUrl.trim()}&cstart=0&pagesize=1000`);
   let response = await axios.get(`${gsUrl.trim()}&cstart=0&pagesize=1000`, {
     headers: {
       "User-Agent":
@@ -360,7 +376,6 @@ exports.scrapDetails = asyncErrorHandler(async (req, res) => {
 
     console.log(publication);
     await wait(60000);
-
   }
   // publication.deleteMany({ nameOfAuthor: req.user.name });
   // publication.insertMany(publications);

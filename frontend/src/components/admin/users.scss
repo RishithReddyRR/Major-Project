@@ -1,0 +1,16 @@
+.admin-users{
+    >div{
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        text-align: center;
+        padding:.7vmax;
+        >h2{
+        padding: 0;
+        margin: 0;
+        }
+        &:nth-child(1){
+            color: white;
+            background-color:tomato ;
+        }
+    }
+}

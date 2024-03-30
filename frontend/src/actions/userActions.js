@@ -92,6 +92,17 @@ export const usersByDepartment = (department) => async (dispatch) => {
     dispatch({ type: "USERS_FAIL", payload: error.response.data.message });
   }
 }
+  //users by Department
+export const getAllUsers = () => async (dispatch) => {
+
+  try {
+    dispatch({type:"USERS_REQUEST"})
+    const {data}=await axios.get(`/user/users`)
+    dispatch({ type: "USERS_SUCCESS",payload:data });
+  } catch (error) {
+    dispatch({ type: "USERS_FAIL", payload: error.response.data.message });
+  }
+}
 //scrap user publications
 
 export const scrapUserPublications = () => async (dispatch) => {

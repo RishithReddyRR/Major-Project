@@ -10,7 +10,6 @@ const Users = () => {
   console.log(department);
   const dispatch = useDispatch();
   const { users } = useSelector((state) => state.users);
-  console.log(users);
   useEffect(() => {
     dispatch(usersByDepartment(department));
   }, []);

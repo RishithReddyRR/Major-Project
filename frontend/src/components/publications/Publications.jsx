@@ -19,7 +19,6 @@ import { MdCalendarMonth } from "react-icons/md";
 import { utils, writeFile } from "xlsx";
 import { BsFilterLeft } from "react-icons/bs";
 import { FaWindowClose } from "react-icons/fa";
-
 const categories = ["Journal", "Book", "Conference", "Patent", "Copyright"];
 const Publications = () => {
   const { keyword } = useParams();
@@ -285,6 +284,7 @@ const Publications = () => {
               </div>
             </div>
           </div>
+         {publications&&publications[0].search==true&&<b>search:{keyword}</b>}
           <div className="line" style={{ width: "74vw" }}></div>
           {publications && filteredPublicationsCount != 0 ? (
             publications.map((ele, idx) => {
