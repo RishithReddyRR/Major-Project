@@ -25,7 +25,6 @@ const Publications = () => {
   const dispatch = useDispatch();
   const [value, setValue] = useState([0, 100000]);
   const [ppp, setPpp] = useState(10);
-  const [Pppp, setPPpp] = useState(10);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -86,8 +85,7 @@ const Publications = () => {
       return newSelected;
     });
   };
-  console.log(fYear);
-  console.log(ppp);
+  console.log(keyword)
   useEffect(() => {
     if (error) {
       toast.error(error, {
@@ -142,6 +140,18 @@ const Publications = () => {
           onClick={() => setCurrentPageNo(1)}
         >
           <FaWindowClose className="close" onClick={() => setFoc(!foc)} />
+          <div style={{textAlign:"center",fontWeight:"bolder"}}>
+            Publications Per Page
+            <input
+              type="text"
+              value={ppp}
+              onChange={(event) => setPpp(event.target.value)}
+              id="publications-per-page"
+              placeholder="publications per page"
+              title="type number and click on enter "
+            />
+          </div>
+          <div className="line"></div>
           <div className="categoryBox">
             <div className="categories">
               <BiSolidCategory />
@@ -253,29 +263,11 @@ const Publications = () => {
                 onClick={() => setFoc(!foc)}
               />
               <b>{selectedCategories.join(",")}</b>
-              {`(${Pppp * (currentPage - 1) + 1}-${
-                currentPage * Pppp
+              {`(${ppp * (currentPage - 1) + 1}-${
+                currentPage * ppp
               } publications from total ${filteredPublicationsCount} publications)`}
             </div>
             <div style={{ marginRight: "1vmax" }}>
-              <form className="ppp">
-                <label htmlFor="">Publications per page</label>
-                <input
-                  type="text"
-                  value={ppp}
-                  onChange={(event) => setPpp(event.target.value)}
-                  id="publications-per-page"
-                  placeholder="publications per page"
-                  title="type number and click on enter "
-                />
-                <button
-                  onClick={() => {
-                    setCurrentPageNo(1);
-                    setPPpp(ppp);
-                  }}
-                  style={{ display: "none" }}
-                ></button>
-              </form>
               <div className="down">
                 <button onClick={downloadAsWorkbook} className="download-excel">
                   Download
@@ -284,7 +276,7 @@ const Publications = () => {
               </div>
             </div>
           </div>
-         {publications&&publications[0].search==true&&<b>search:{keyword}</b>}
+          {!(keyword==undefined)&&<b>search:{keyword}</b>}
           <div className="line" style={{ width: "74vw" }}></div>
           {publications && filteredPublicationsCount != 0 ? (
             publications.map((ele, idx) => {

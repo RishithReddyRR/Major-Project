@@ -591,6 +591,8 @@ exports.getPublications = asyncErrorHandler(async (req, res, next) => {
   // console.log(agexp[0].$search.compound.must)
   let pub = await publication.aggregate(agexp);
 
+
+
   let temp = [];
   for (let i = 0; i < pub.length; i++) {
     if (req.query.department.includes(pub[i].department)) {

@@ -45,6 +45,11 @@ app.use(fileUpload());
 app.use('/user',userRoute)
 app.use('/publication',publicationRoute)
 app.use('/carousel-image',imagesRoute)
+app.get('/',(req,res)=>{
+  res.json({
+    message:"Hello"
+  })
+})
 //middleware to handle the errors
 app.use(errorMiddleware)
 //this is to listen the requests
